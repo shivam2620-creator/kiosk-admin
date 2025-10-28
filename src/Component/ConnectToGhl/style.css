@@ -1,0 +1,8 @@
+.connect-to-ghl-btn{
+    padding: 10px 20px;
+    background-color: white;
+    border: none;
+    color: black;
+    border-radius: 10px;
+    cursor: pointer;
+}
