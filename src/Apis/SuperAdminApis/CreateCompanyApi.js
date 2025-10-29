@@ -1,8 +1,9 @@
 import axios from "axios";
+import axiosInstance from "../axiosInstance";
 
 
 const createCompanyApi = async (companyData) => {
-    return axios.post("https://us-central1-tattoo-shop-printing-dev.cloudfunctions.net/company", companyData);
+    return axiosInstance.post("/company", companyData);
 }
 
 export { createCompanyApi }

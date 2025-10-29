@@ -1,5 +1,6 @@
 // AuthContext.jsx
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, use, useContext, useEffect, useState } from "react";
+import { getUserDetailsById } from "../Apis/AuthApi/AuthApi";
 import toast from "react-hot-toast";
 
 const AuthContext = createContext();
@@ -10,6 +11,9 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshIntervalId, setRefreshIntervalId] = useState(null);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const [isCompanyAdmin, setIsCompanyAdmin] = useState(false);
+  const [userId, setUserId] = useState(localStorage.getItem("userId") || null);
 
   const FIREBASE_API_KEY = process.env.REACT_APP_FIREBASE_API_KEY;
 
@@ -59,10 +63,9 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("refreshToken", data.refresh_token);
       localStorage.setItem("tokenExpiry", Date.now() + data.expires_in * 1000);
 
-      console.log("✅ Token refreshed:", new Date().toLocaleTimeString());
+
       return data.id_token;
     } catch (err) {
-      console.error("Refresh token failed:", err);
       handleLogout("Session expired. Please log in again.");
       throw err;
     }
@@ -83,19 +86,47 @@ export const AuthProvider = ({ children }) => {
     }, 60 * 1000);
 
     setRefreshIntervalId(id);
-    console.log("⏳ Token refresh scheduler started");
+
   };
 
+  const fetchUserDetails = async () => {
+    try {
+      const userDetails = await getUserDetailsById(userId);
+
+      setUser(userDetails.data.user);
+      setIsSuperAdmin(userDetails.data.user.role === "admin");
+
+      setIsCompanyAdmin(userDetails.data.user.role === "company_admin");
+     
+      
+    } catch (error) {
+      console.error("Error fetching user details after login:", error);
+
+    }
+  }
+
+   useEffect(() => {
+    if (userId) {
+      fetchUserDetails();
+    }
+  }, [userId]
+  );
+
+
   // 🚪 Login user
-  const login = (tokens) => {
+  const login = async (tokens,id) => {
     localStorage.setItem("idToken", tokens.idToken);
     localStorage.setItem("refreshToken", tokens.refreshToken);
+    localStorage.setItem("userId", id);
     localStorage.setItem(
       "tokenExpiry",
       Date.now() + tokens.expiresIn * 1000
     );
+    setUserId(id);
     startTokenRefreshScheduler(tokens.refreshToken);
-    toast.success("Logged in successfully!");
+    await fetchUserDetails();
+    
+    
   };
 
   // 🚫 Logout user
@@ -104,7 +135,7 @@ export const AuthProvider = ({ children }) => {
     clearInterval(refreshIntervalId);
     setUser(null);
     toast.error(message);
-    setTimeout(() => (window.location.href = "auth/login"), 800);
+    setTimeout(() => (window.location.href = "/auth/login"), 800);
   };
 
   const value = {
@@ -113,6 +144,8 @@ export const AuthProvider = ({ children }) => {
     login,
     handleLogout,
     getValidIdToken,
+    isSuperAdmin,
+    isCompanyAdmin
   };
 
   return (

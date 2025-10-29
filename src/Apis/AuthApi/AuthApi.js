@@ -1,0 +1,32 @@
+import axiosInstance from "../axiosInstance";
+import axios from "axios";
+
+
+
+const loginApi = (data) => {
+    return axios.post(`https://us-central1-tattoo-shop-printing-dev.cloudfunctions.net/auth/login`,data);
+}
+
+const createUserApi = (data,companyId) => {
+    return axiosInstance.post(`/auth/sign-up${companyId ? `?companyId=${companyId}` : ""}`,data);
+}
+
+const sendOtpApi = () => {
+    return axiosInstance.post("/auth/send-otp");
+}
+
+
+const resetPasswordUsingOtpApi = () => {
+    return axiosInstance.post("/auth/reset-password-otp");
+}
+
+const resetPassword = () => {
+    return axiosInstance.post("/auth/reset-password");
+}
+
+const getUserDetailsById = (userId) => {
+    return axiosInstance.get(`/profile/${userId}`);
+
+}
+
+export { loginApi, createUserApi, sendOtpApi, resetPasswordUsingOtpApi, resetPassword,getUserDetailsById }

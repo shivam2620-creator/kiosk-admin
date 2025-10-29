@@ -8,10 +8,12 @@ const UpdateBranding = () => {
 
   return (
     <div className='update-branding-cont'>
+        <div style={{maxWidth: "700px", width: "100%", margin: "0px auto"}}>
       <CompanySelector
         selectedCompanyId={selectedCompanyId}
         setSelectedCompanyId={setSelectedCompanyId}
       />
+        </div>
       {selectedCompanyId && (
         <div >
           <ThemeForm companyId={selectedCompanyId} />

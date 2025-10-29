@@ -137,6 +137,70 @@
   padding: 10px;
 }
 
+/* ===== Settings Dropdown ===== */
+.sidebar-divider {
+  margin: 15px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+
+.settings-dropdown {
+  display: flex;
+  flex-direction: column;
+  margin-left: 15px;
+  margin-top: 8px;
+  gap: 5px;
+  transition: all 0.3s ease;
+}
+
+.sub-option {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding-left: 35px;
+}
+
+.sub-option.active {
+  background-color: var(--button-color);
+}
+
+
+
+.back-button-superadmin {
+  cursor: pointer;
+  color: white;
+  margin-bottom: 10px;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.back-button-superadmin:hover {
+  transform: scale(1.1);
+  color: var(--button-color);
+}
+
+/* Small tooltip for hover (native title attr works too, but optional custom look) */
+.back-button-superadmin[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  left: 35px;
+  top: 5px;
+  background: #333;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10;
+}
+
 /* ====== Responsive (Mobile/Tablet) ====== */
 @media (max-width: 1024px) {
   .sidebar {

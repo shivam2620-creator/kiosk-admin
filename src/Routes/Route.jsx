@@ -5,7 +5,10 @@ import AdminOptions from "../Component/AdminOptions/AdminOptions";
 import CreateCompany from "../Pages/CreateCompany/CreateCompany";
 import UpdateBranding from "../Pages/UpdateBranding/UpdateBranding";
 import AuthLayout from "../Layout/AuthLayout/AuthLayout";
+import AllCompanyList from "../Pages/AllCompanyLlist/AllCompanyList";
+import CreateStudio from "../Pages/CreateStudio/CreateStudio";
 import LoginPage from "../Pages/Login/Login";
+import CreateUser from "../Pages/CreateUser/CreateUser";
 
 
 
@@ -19,12 +22,25 @@ const Route = createBrowserRouter([
                 element : <AdminOptions />
             },
             {
-                path: "/create-company",
+                path: "/settings/create-company",
                 element: <CreateCompany />
             },
             {
+                path : "/settings/create-studio",
+                element : <CreateStudio />
+            },
+
+            {
                 path: "/update-branding",
                 element: <UpdateBranding />
+            },
+            {
+                path: "/companies-list",
+                element: <AllCompanyList />
+            },
+            {
+                path: "/settings/create-user",
+                element: <CreateUser />
             }
 
         ]

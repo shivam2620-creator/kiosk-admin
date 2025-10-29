@@ -12,10 +12,10 @@ const themeConfigiration = [
   { key: "textColor", label: "Text Color" },
 ];
 
-const ThemeForm = ({companyId}) => {
+const ThemeForm = ({ companyId }) => {
   const [form, setForm] = useState({
     fontFamily: "",
-    logoUrl: "logo.png",
+    logoUrl: "",
     primaryColor: "",
     secondaryColor: "",
     background: "",
@@ -30,15 +30,15 @@ const ThemeForm = ({companyId}) => {
   };
 
   const handleSubmit = async () => {
-        try{
-            const response = await updateBrandingApi(companyId,form);
-            console.log(response)
-            if(response?.data?.success){ 
-                 toast.success(response?.data?.message || "Theme updated successfully");
-            }
-        }catch(err){
-            console.log(err);
-        }
+    try {
+      const response = await updateBrandingApi(companyId, form);
+      if (response?.data?.success) {
+        toast.success(response?.data?.message || "Theme updated successfully");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to update theme.");
+    }
   };
 
   return (
@@ -46,10 +46,10 @@ const ThemeForm = ({companyId}) => {
       <h2>Theme Configuration</h2>
 
       <FontSelector
-  onSelect={(fonts) =>
-    setForm((prev) => ({ ...prev, fontFamily: fonts }))
-  }
-/>
+        onSelect={(fonts) =>
+          setForm((prev) => ({ ...prev, fontFamily: fonts }))
+        }
+      />
 
       <LogoUploader
         onUpload={(url) => setForm((prev) => ({ ...prev, logoUrl: url }))}
@@ -60,10 +60,12 @@ const ThemeForm = ({companyId}) => {
       <div className="theme-color-grid">
         {themeConfigiration.map((item) => (
           <div key={item.key} className="theme-color-item">
-            <label>{item.label}</label>
+            <label>
+              <span className="required">*</span> {item.label}
+            </label>
             <input
               type="text"
-              placeholder={`Enter hex code eg: #ffffff`}
+              placeholder="Enter hex code e.g. #ffffff"
               value={form[item.key]}
               onChange={(e) => handleChange(item.key, e.target.value)}
             />

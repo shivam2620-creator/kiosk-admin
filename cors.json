@@ -1,0 +1,16 @@
+[
+  {
+    "origin": [
+      "http://localhost:3000",
+      "https://kiosk-admin-black.vercel.app"
+    ],
+    "method": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    "responseHeader": [
+      "Content-Type",
+      "x-goog-meta-*",
+      "x-goog-acl",
+      "Authorization"
+    ],
+    "maxAgeSeconds": 3600
+  }
+]

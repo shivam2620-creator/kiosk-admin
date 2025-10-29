@@ -1,8 +1,8 @@
 
-import axios from "axios";
+import axiosInstance from "../axiosInstance";
 
 const getAllCompanyApi = () => {
-    return axios.get("https://us-central1-tattoo-shop-printing-dev.cloudfunctions.net/company");
+    return axiosInstance.get("/company");
 }
 
 

@@ -23,14 +23,14 @@
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 5px;
-  color: white;
+  color: #ccc;
 }
 
 .dropdown-input {
   border: 1px solid #ccc;
   padding: 10px 12px;
   border-radius: 6px;
-  background-color: #fafafa;
+  background-color: #fafa;
   cursor: pointer;
   display: flex;
   justify-content: space-between;

@@ -1,0 +1,153 @@
+.create-user-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+  background-color: var(--background-color, #1e1e1e);
+  min-height: 85vh;
+}
+
+.create-user-card {
+  background-color: var(--primary-color, #2c2c2c);
+  padding: 30px;
+  border-radius: 16px;
+  max-width: 700px;
+  width: 100%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.create-user-card h2 {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 25px;
+  color: #fff;
+}
+
+.create-user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #ccc;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.required {
+  color: red;
+  margin-right: 4px;
+}
+
+.form-group input {
+  background-color: #1a1a1a;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.form-group input:focus {
+  border-color: var(--button-color, #ecaa20);
+}
+
+/* Phone Input */
+.phone-input-container {
+  width: 100%;
+}
+
+.phone-input-field {
+  width: 100% !important;
+  background-color: #1a1a1a !important;
+  color: white !important;
+  border: 1px solid #444 !important;
+  border-radius: 6px !important;
+
+}
+
+.react-tel-input .form-control, .react-tel-input .selected-flag{
+      background-color: #1a1a1a !important;
+  color: white !important;
+  border: 1px solid #444 !important;
+  border-radius: 6px !important;
+}
+
+.react-tel-input .country-list{
+    background-color: #1a1a1a !important;
+  color: white !important;
+}
+
+.react-tel-input .flag-dropdown{
+    background-color: #1a1a1a !important;
+  border: 1px solid #444 !important;
+  border-radius: 6px !important;
+}
+.radio-group {
+  display: flex;
+  gap: 25px;
+  margin-top: 6px;
+}
+.react-tel-input .country-list .country.highlight{
+    background-color: var(--button-color, #ecaa20) !important;
+}
+.react-tel-input .country-list .country .dial-code{
+    color: white !important;
+}
+
+.react-tel-input .country-list .country:hover{
+    background-color: var(--button-color, #ecaa20) !important;
+}
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.submit-btn {
+  background-color: var(--button-color, #ecaa20);
+  color: #000;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: #ffbf33;
+}
+
+.submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+  }
+
+  .create-user-card {
+    padding: 20px;
+  }
+}

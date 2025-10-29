@@ -1,21 +1,32 @@
 // LoginPage.jsx
 import { useState } from "react";
+import { loginApi } from "../../Apis/AuthApi/AuthApi";
+import { useAuth } from "../../Utils/AuthContext";
 import "./style.css";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    // Simulate login delay
-    setTimeout(() => {
+    try {
+      const response = await loginApi({ email, password});
+      const token = {idToken : response.data?.idToken , refreshToken : response.data?.refreshToken};
+     
+        await login(token, response.data?.uid);
+        toast.success("Login successful!");
+    
+    } catch (error) {
+      toast.error(error.response?.data?.error || "Login failed. Please try again.");
+      console.error("Login error:", error);
+    } finally {
       setLoading(false);
-      alert(`Logged in as ${email}`);
-    }, 1500);
+    }
   };
 
   const isDisabled = !email || !password || loading;
