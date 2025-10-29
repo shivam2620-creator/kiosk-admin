@@ -1,34 +1,21 @@
 import "./style.css"
-
-import { getCompoanyDetails , ConnectToGhlApi} from "../../Apis/SuperAdminApis/ConnectToGhlApi"
-import { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 const ConnectToGhl = () => {
+    const navigate = useNavigate();
 
     const handleConnect = async() => {
-        try {
-            const response = await ConnectToGhlApi();
-            console.log("Connected to GHL:", response.data);
-        } catch (error) {
-            console.error("Error connecting to GHL:", error);
-        }
+         window.location.href = "https://us-central1-tattoo-shop-printing-dev.cloudfunctions.net/company/connect"
     }
 
-    useEffect(() => {
-        const fetchCompanyDetails = async() => {
-            try {
-                const response = await getCompoanyDetails();
-                console.log("Company Details:", response.data);
-            }           catch (error) { 
-                console.error("Error fetching company details:", error);
-            }
-        }
 
-        fetchCompanyDetails();
-    }, [])
   return (
+    <div className="connect-to-ghl-cont">
+
+   
     <button className="connect-to-ghl-btn" onClick={handleConnect}>
         Connect to GHL
     </button>
+     </div>
   )
 }
 

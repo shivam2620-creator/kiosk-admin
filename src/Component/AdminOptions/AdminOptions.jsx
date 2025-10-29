@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import "./style.css"
 
+
 import { IoIosCreate } from "react-icons/io";
+import { MdOutlineTipsAndUpdates } from "react-icons/md";
 
 
 const options = [
@@ -11,12 +13,9 @@ const options = [
         path: "/create-company"
       },
       {
-        icon : <IoIosCreate size={22}/>,
-        title : "Create Compoany"
-      },
-      {
-        icon : <IoIosCreate size={22}/>,
-        title : "Create Compoany"
+        icon : <MdOutlineTipsAndUpdates size={22}/>,
+        title : "Update Branding",
+        path: "/update-branding"
       }
 ]
 

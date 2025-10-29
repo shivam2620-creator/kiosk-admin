@@ -6,3 +6,10 @@
     border-radius: 10px;
     cursor: pointer;
 }
+
+.connect-to-ghl-cont{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}

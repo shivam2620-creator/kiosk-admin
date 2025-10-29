@@ -1,0 +1,91 @@
+.theme-form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 25px 30px;
+  background: #333;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  color: white;
+  flex-direction: column;
+    gap: 20px;
+  
+
+}
+
+.theme-form-container h2 {
+  text-align: center;
+  
+}
+
+.theme-form-container h3 {
+  color: #ECAA20;
+  border-bottom: 2px solid #ECAA20;
+  padding-bottom: 4px;
+}
+
+/* === Grid layout for color inputs === */
+.theme-color-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.theme-color-item{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.theme-color-item label {
+  display: block;
+  font-weight: 600;
+}
+
+.theme-color-item input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.theme-color-item input:focus {
+  border-color: #ECAA20;
+  outline: none;
+}
+
+/* === Submit Button === */
+.submit-btn {
+  width: 100%;
+  padding: 12px 0;
+  border: none;
+  background-color: #ECAA20;
+  color: white;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+
+}
+
+.submit-btn:hover {
+  transform: scale(1.02);
+  opacity: 0.9;
+}
+
+/* === Responsive === */
+@media (max-width: 600px) {
+  .theme-form-container {
+    padding: 20px;
+  }
+
+  .theme-color-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .submit-btn {
+    font-size: 15px;
+  }
+}

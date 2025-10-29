@@ -1,0 +1,95 @@
+.company-selector {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+
+}
+
+.company-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: white;
+}
+
+.dropdown-input {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 10px 12px;
+  background-color: #fafafa;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: border-color 0.2s ease;
+}
+
+.dropdown-input.active {
+  border-color: #ecaa20;
+}
+
+.arrow {
+  font-size: 12px;
+  color: #666;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 105%;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 50;
+}
+
+.dropdown-search {
+  width: calc(100% - 20px);
+  margin: 8px 10px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.dropdown-list {
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.dropdown-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #f3f3f3;
+  transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f8f8;
+}
+
+.dropdown-item.selected {
+  background-color: var(--button-color);
+  color: white;
+}
+
+.company-name {
+  font-weight: 600;
+}
+
+.company-email {
+  font-size: 13px;
+  color: #555;
+}
+.dropdown-item.selected .company-email{
+    color: #eceaea;
+}
+
+.no-results {
+  text-align: center;
+  padding: 12px;
+  color: #777;
+  font-size: 14px;
+}

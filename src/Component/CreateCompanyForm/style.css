@@ -1,0 +1,122 @@
+.company-form-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 25px;
+  border-radius: 10px;
+  background-color: var(--primary-color, #333);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.company-form-container h2 {
+  text-align: center;
+}
+
+.company-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.required {
+  color: #ff4d4d;
+  font-weight: 700;
+}
+
+/* ✅ Slightly more padding for better UI */
+.form-group input {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  color: #000; /* black text */
+  background-color: #fff; /* ensure good contrast */
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--button-color);
+  box-shadow: 0 0 5px var(--button-color);
+}
+
+
+
+/* ✅ react-phone-input-2 overrides */
+.react-tel-input .form-control {
+  width: 100% !important;
+  border-radius: 6px !important;
+  font-size: 15px !important;
+  border: 1px solid #ccc !important;
+  color: #000 !important; /* make text black */
+  background-color: #fff !important; /* white background */
+}
+
+.react-tel-input .selected-flag {
+  border-right: 1px solid #ccc !important;
+}
+
+.react-tel-input .country-list {
+  background-color: #fff !important;
+  color: #000 !important;
+}
+
+/* ✅ Mobile responsive */
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+  }
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--button-color);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: var(--button-color);
+  transform: scale(1.02);
+}
+
+.submit-btn:disabled {
+  background-color: #a5a5a5;
+  cursor: not-allowed;
+}
+
+.syncing-ghl-loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  color: white;
+  font-size: 18px;
+  margin-top: 180px;
+}

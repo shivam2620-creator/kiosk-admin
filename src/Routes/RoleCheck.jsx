@@ -1,12 +1,13 @@
 import React from 'react'
-import SuperAdmin from '../Layout/SuperAdmin/SuperAdmin';
+import MainLayout from '../Layout/Dashboard/MainLayout';
+
 
 const RoleCheck = () => {
 
   const role = "superadmin";
 
   if(role === "superadmin"){
-    return <SuperAdmin />
+    return <MainLayout/>
   }
   return (
     <div>
