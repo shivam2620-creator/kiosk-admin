@@ -1,0 +1,117 @@
+
+
+
+
+/* Center container */
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+/* Box */
+.login-box {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 600px;
+  width: 500px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login-box:hover {
+  transform: translateY(-3px);
+}
+
+/* Title */
+.login-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Form */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Labels */
+.login-label {
+  font-size: 1rem;
+  font-weight: 500;
+  font-weight: 600;
+}
+
+.required {
+  color: red;
+  margin-right: 4px;
+}
+
+/* Inputs */
+.login-input {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 10px;
+  outline: none;
+  font-size: 0.95rem;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-input:focus {
+    outline: none;
+  border-color: var(--button-color);
+
+}
+
+.login-form-group{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+/* Button */
+.login-button {
+
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--button-color);
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.login-button:hover {
+  transform: translateY(-1px);
+}
+
+.login-button.disabled {
+  background-color: #9a9a9a;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Spinner */
+.spinner {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

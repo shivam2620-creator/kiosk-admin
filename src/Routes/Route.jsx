@@ -4,6 +4,8 @@ import RoleCheck from "./RoleCheck";
 import AdminOptions from "../Component/AdminOptions/AdminOptions";
 import CreateCompany from "../Pages/CreateCompany/CreateCompany";
 import UpdateBranding from "../Pages/UpdateBranding/UpdateBranding";
+import AuthLayout from "../Layout/AuthLayout/AuthLayout";
+import LoginPage from "../Pages/Login/Login";
 
 
 
@@ -25,6 +27,20 @@ const Route = createBrowserRouter([
                 element: <UpdateBranding />
             }
 
+        ]
+    },
+    {
+        path: "/auth",
+        element: <AuthLayout />,
+        children: [
+            {
+                index: true,
+                element:  <LoginPage />
+            },
+            {
+                path: "login",
+                element: <LoginPage />
+            }
         ]
     }
  
