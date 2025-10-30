@@ -11,7 +11,11 @@ import { IoIosCreate, IoIosListBox } from "react-icons/io";
 import { MdOutlineTipsAndUpdates } from "react-icons/md";
 import { FaUserPlus } from "react-icons/fa6";
 import { useAuth } from "../../Utils/AuthContext";
+import { FiLogOut } from "react-icons/fi"; 
+import MediumSpinner from "../../Utils/MediumSpinner/MediumSpinner";
+
 import "./style.css";
+import { DiOnedrive } from "react-icons/di";
 
 
 // ===== Sidebar Options =====
@@ -31,9 +35,15 @@ const sidebarOptions = [
   {
     title: "Companies List",
     path: "/companies-list",
-    icon: <IoIosListBox size={22} />,
+     icon: <IoIosListBox size={22} />,
     roles: ["superAdmin"], // only for super admin
   },
+  {
+    title: "Stuidios List",
+    path: "/all-studios",
+    icon: <IoIosListBox size={22} />,
+    roles: ["superAdmin", "companyAdmin"], // visible to both
+  }
 ];
 
 // ===== Settings Options =====
@@ -62,8 +72,8 @@ const settingsOptions = [
 const MainLayout = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { isSuperAdmin, isCompanyAdmin } = useAuth();
-  console.log("Role in MainLayout:", { isSuperAdmin, isCompanyAdmin });
+  const { isSuperAdmin, isCompanyAdmin, user,userLoading, handleLogout} = useAuth();
+  
 
   // UI States
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -84,8 +94,14 @@ const MainLayout = () => {
     return segments.length > 1;
   })();
 
+
+  if(userLoading){
+    return <div style={{display:'flex',width: "100%", height: "100vh" , alignItems: "center", justifyContent: "center"}}>
+      <MediumSpinner />
+    </div>
+  }
   return (
-    <div className="main-layout">
+    <div className="main-layout"  key={isSuperAdmin ? "superAdmin" : isCompanyAdmin ? "companyAdmin" : "guest"}>
       {/* ===== Sidebar ===== */}
       <aside
         className={`sidebar ${isSidebarOpen ? "open" : ""} ${
@@ -162,7 +178,15 @@ const MainLayout = () => {
               </div>
             )}
           </div>
+          
         </nav>
+        <div className="sidebar-logout">
+            <button className="sidebar-option logout-btn" onClick={handleLogout}>
+              <FiLogOut size={22} />
+              {!isCollapsed && <span>Logout</span>}
+            </button>
+          </div>
+      
       </aside>
 
       {/* ===== Main Content ===== */}

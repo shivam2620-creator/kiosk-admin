@@ -1,0 +1,71 @@
+.studio-list-container {
+  padding: 20px;
+}
+
+.studio-table-title {
+  font-size: 22px;
+  margin-bottom: 15px;
+  font-weight: 600;
+  color: white;
+}
+
+.studio-table-wrapper {
+  overflow-x: auto;
+  border: 2px solid #444;
+  border-radius: 8px;
+}
+
+.studio-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #333;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.studio-table th,
+.studio-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #424141;
+  text-align: left;
+  font-size: 14px;
+}
+
+.studio-table th {
+  background-color: #333;
+  font-weight: 600;
+  color: rgb(175, 174, 174);
+}
+
+.studio-table tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* ✅ Delete Button */
+.studio-delete-btn {
+  background: #ff4d4d;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.2s ease;
+}
+
+.studio-delete-btn:hover {
+  background: #e60000;
+}
+
+.studio-delete-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ✅ Medium Spinner Container */
+.studio-loading-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}

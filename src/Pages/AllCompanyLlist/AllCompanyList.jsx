@@ -8,14 +8,16 @@ import toast from "react-hot-toast";
 const AllCompanyList = () => {
   const [companies, setCompanies] = useState([]);
   const [dataLoading, setDataLoading] = useState(false);
-  const [deletingId, setDeletingId] = useState(null); // ✅ track which row is being deleted
+  const [deletingId, setDeletingId] = useState(null);
 
+
+  
   const fetchCompanyDetails = async () => {
     try {
       setDataLoading(true);
       const response = await getAllCompanyApi();
-      console.log(response.data)
       setCompanies(response?.data?.companies || []);
+
     } catch (err) {
       console.error("Error fetching companies:", err);
     } finally {

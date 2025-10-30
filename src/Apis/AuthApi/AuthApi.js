@@ -11,13 +11,13 @@ const createUserApi = (data,companyId) => {
     return axiosInstance.post(`/auth/sign-up${companyId ? `?companyId=${companyId}` : ""}`,data);
 }
 
-const sendOtpApi = () => {
-    return axiosInstance.post("/auth/send-otp");
+const sendOtpApi = (data) => {
+    return axiosInstance.post("/auth/send-otp",data);
 }
 
 
-const resetPasswordUsingOtpApi = () => {
-    return axiosInstance.post("/auth/reset-password-otp");
+const resetPasswordUsingOtpApi = (data) => {
+    return axiosInstance.post("/auth/reset-password-otp",data);
 }
 
 const resetPassword = () => {

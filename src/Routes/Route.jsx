@@ -9,6 +9,8 @@ import AllCompanyList from "../Pages/AllCompanyLlist/AllCompanyList";
 import CreateStudio from "../Pages/CreateStudio/CreateStudio";
 import LoginPage from "../Pages/Login/Login";
 import CreateUser from "../Pages/CreateUser/CreateUser";
+import AllStudios from "../Pages/AllStudios/AllStudios";
+import ForgotPassword from "../Pages/ForgotPassword/ForgotPassword";
 
 
 
@@ -35,6 +37,11 @@ const Route = createBrowserRouter([
                 element: <UpdateBranding />
             },
             {
+                path: "/all-studios",
+                element: <AllStudios />
+
+            },
+            {
                 path: "/companies-list",
                 element: <AllCompanyList />
             },
@@ -56,6 +63,10 @@ const Route = createBrowserRouter([
             {
                 path: "login",
                 element: <LoginPage />
+            },{
+                path: "forgot-password",
+                element: <ForgotPassword />
+                 
             }
         ]
     }

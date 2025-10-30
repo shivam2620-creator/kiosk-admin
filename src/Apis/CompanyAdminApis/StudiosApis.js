@@ -1,7 +1,14 @@
-import axios from "axios";
+import axiosInstance from "../axiosInstance";
 
 
 
-const createStudioApi = async (companyId, studioData) => {
-    return axios.post(`https://us-central1-tattoo-shop-printing-dev.cloudfunctions.net/studios/${companyId}`, studioData);
+const createStudioApi =  (companyId, studioData) => {
+    return axiosInstance.post(`studios/${companyId}`, studioData);
 }
+
+const getAllStudiosApi =  (companyId) => {
+    return axiosInstance.get(`/studios?compoanyId=${companyId}`);
+}
+
+
+export { createStudioApi, getAllStudiosApi }

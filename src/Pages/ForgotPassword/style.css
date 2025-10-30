@@ -1,14 +1,16 @@
-/* === Layout Container === */
-.login-container {
+/* Container */
+.forgot-container {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
   color: white;
+
 }
 
-/* === Login Box === */
-.login-box {
+
+/* Box */
+.forgot-box {
   background: #1f1f1f;
   padding: 2rem;
   border-radius: 12px;
@@ -21,12 +23,12 @@
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
 }
 
-.login-box:hover {
+.forgot-box:hover {
   transform: translateY(-3px);
 }
 
-/* === Title === */
-.login-title {
+/* Title */
+.forgot-title {
   text-align: center;
   font-size: 1.8rem;
   font-weight: 600;
@@ -34,15 +36,14 @@
   color: white;
 }
 
-/* === Form === */
-.login-form {
+/* Input Groups */
+.forgot-form-group {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 8px;
 }
 
-/* === Label === */
-.login-label {
+.forgot-label {
   font-size: 0.95rem;
   font-weight: 600;
   color: #f1f1f1;
@@ -53,8 +54,8 @@
   margin-right: 4px;
 }
 
-/* === Input === */
-.login-input {
+/* Input */
+.forgot-input {
   border: 1px solid #444;
   border-radius: 6px;
   padding: 10px;
@@ -64,21 +65,14 @@
   transition: border 0.2s ease, box-shadow 0.2s ease;
 }
 
-.login-input:focus {
+.forgot-input:focus {
   border-color: var(--button-color, #ecaa20);
   box-shadow: 0 0 5px rgba(236, 170, 32, 0.4);
   outline: none;
 }
 
-/* === Form Group === */
-.login-form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-/* === Button === */
-.login-button {
+/* Button */
+.forgot-btn {
   padding: 10px;
   border: none;
   border-radius: 8px;
@@ -88,55 +82,44 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
+  display: flex;
+  justify-content: center;
 }
 
-.login-button:hover {
+.forgot-btn:hover {
   transform: translateY(-1px);
   background-color: #ffbb33;
 }
 
-.login-button.disabled {
+.forgot-btn.disabled {
   background-color: #555;
   cursor: not-allowed;
   transform: none;
 }
 
-/* === Spinner === */
-.spinner {
-  border: 3px solid rgba(255, 255, 255, 0.2);
-  border-top: 3px solid white;
-  border-radius: 50%;
-  width: 16px;
-  height: 16px;
-  animation: spin 0.8s linear infinite;
+.back-login-btn{
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    width: fit-content;
+}
+.back-login-btn:hover{
+    text-decoration: underline;
+    cursor: pointer;
+    color: var(--button-color,#ecaa20);
+}
+.back-login-btn p{
+    font-weight: 300;
+    font-size: 12px;
+}
+
+/* Spinner Center */
+.forgot-btn .spinner {
   margin: 0 auto;
 }
 
-.forgot-password-link{
-    text-align: right;
-    cursor: pointer;
-    font-size: 14px;
-  
-}
-
-.forgot-password-link p {
-    font-weight: 300;
-}
-
-.forgot-password-link:hover{
-    text-decoration: underline;
-    color: var(--button-color, #ecaa20);
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* === Responsive === */
 @media (max-width: 600px) {
-  .login-box {
+  .forgot-box {
     width: 90%;
     padding: 1.5rem;
   }

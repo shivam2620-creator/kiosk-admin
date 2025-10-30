@@ -13,7 +13,8 @@ export const AuthProvider = ({ children }) => {
   const [refreshIntervalId, setRefreshIntervalId] = useState(null);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [isCompanyAdmin, setIsCompanyAdmin] = useState(false);
-  const [userId, setUserId] = useState(localStorage.getItem("userId") || null);
+  const [userLoading, setUserLoading] = useState(true);
+  const [userId, setUserId] = useState(localStorage.getItem("userId") || undefined);
 
   const FIREBASE_API_KEY = process.env.REACT_APP_FIREBASE_API_KEY;
 
@@ -90,23 +91,23 @@ export const AuthProvider = ({ children }) => {
   };
 
   const fetchUserDetails = async () => {
-    try {
-      const userDetails = await getUserDetailsById(userId);
-
-      setUser(userDetails.data.user);
-      setIsSuperAdmin(userDetails.data.user.role === "admin");
-
-      setIsCompanyAdmin(userDetails.data.user.role === "company_admin");
-     
-      
-    } catch (error) {
-      console.error("Error fetching user details after login:", error);
-
-    }
+  try {
+    setUserLoading(true);
+    const userDetails = await getUserDetailsById(userId);
+    setUser(userDetails.data.user);
+    setIsSuperAdmin(userDetails.data.user.role === "admin");
+    setIsCompanyAdmin(userDetails.data.user.role === "company_admin");
+  } catch (error) {
+    console.error("Error fetching user details:", error);
+  } finally {
+    setUserLoading(false);
   }
+};
+
 
    useEffect(() => {
     if (userId) {
+      console.log("user id" , userId)
       fetchUserDetails();
     }
   }, [userId]
@@ -124,7 +125,7 @@ export const AuthProvider = ({ children }) => {
     );
     setUserId(id);
     startTokenRefreshScheduler(tokens.refreshToken);
-    await fetchUserDetails();
+   
     
     
   };
@@ -141,6 +142,7 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     loading,
+    userLoading,
     login,
     handleLogout,
     getValidIdToken,

@@ -1,0 +1,82 @@
+.create-studio-container {
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 25px 30px;
+  background: #222;
+  color: white;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.create-studio-container h2 {
+  text-align: center;
+  color: white;
+  margin-bottom: 25px;
+}
+
+.create-studio-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: white;
+}
+
+.required {
+  color: red;
+  margin-right: 3px;
+}
+
+.form-group input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background: #333;
+  color: white;
+  font-size: 14px;
+}
+
+.form-group input:focus {
+  border-color: #ECAA20;
+  outline: none;
+}
+
+/* react-phone-input-2 */
+.phone-input {
+  width: 100% !important;
+  background: #333 !important;
+  color: white !important;
+  border: 1px solid #555 !important;
+  border-radius: 6px !important;
+  padding: 10px !important;
+}
+
+.submit-btn {
+  background: #ECAA20;
+  color: white;
+  font-weight: 600;
+  padding: 12px 0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.3s ease, transform 0.2s ease;
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: scale(1.03);
+  opacity: 0.9;
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

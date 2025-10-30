@@ -200,6 +200,24 @@
   white-space: nowrap;
   z-index: 10;
 }
+.sidebar-logout {
+  margin-top: auto;
+  padding: 15px 10px;
+  border-top: 1px solid #444;
+}
+
+.logout-btn {
+  color: #ff6666;
+  transition: color 0.2s ease;
+}
+
+.logout-btn:hover {
+  color: #ff4444;
+}
+
+.sidebar.collapsed .logout-btn span {
+  display: none;
+}
 
 /* ====== Responsive (Mobile/Tablet) ====== */
 @media (max-width: 1024px) {
