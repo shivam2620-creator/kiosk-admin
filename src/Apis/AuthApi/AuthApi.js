@@ -12,12 +12,12 @@ const createUserApi = (data,companyId) => {
 }
 
 const sendOtpApi = (data) => {
-    return axiosInstance.post("/auth/send-otp",data);
+    return axios.post("https://us-central1-tattoo-shop-printing-dev.cloudfunctions.net/auth/send-otp",data);
 }
 
 
 const resetPasswordUsingOtpApi = (data) => {
-    return axiosInstance.post("/auth/reset-password-otp",data);
+    return axios.post("https://us-central1-tattoo-shop-printing-dev.cloudfunctions.net/auth/reset-password-otp",data);
 }
 
 const resetPassword = () => {

@@ -118,6 +118,34 @@
   margin: 0 auto;
 }
 
+.resend-otp-section {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.otp-timer {
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+.resend-otp-btn {
+  background: none;
+  color: var(--button-color);
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.resend-otp-btn:hover {
+  color: #f5b84f;
+}
+
+
 @media (max-width: 600px) {
   .forgot-box {
     width: 90%;
