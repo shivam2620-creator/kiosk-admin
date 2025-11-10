@@ -9,7 +9,7 @@ export const fetchAllCalendar = async (companyId,dispatch) => {
          console.log(response);
          if(response?.data?.success){
               dispatch(setCalendarData(response?.data?.calendars))
-              toast.success(response?.data?.messages);
+              
          }
 
     }catch(err){

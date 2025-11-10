@@ -1,6 +1,7 @@
 // AuthContext.jsx
 import { createContext, use, useContext, useEffect, useState } from "react";
 import { getUserDetailsById } from "../Apis/AuthApi/AuthApi";
+import { getCompanyDetailApi } from "../Apis/CompanyAdminApis/CompanyApis";
 import toast from "react-hot-toast";
 
 const AuthContext = createContext();
@@ -15,7 +16,8 @@ export const AuthProvider = ({ children }) => {
   const [isCompanyAdmin, setIsCompanyAdmin] = useState(false);
   const [userLoading, setUserLoading] = useState(true);
   const [userId, setUserId] = useState(localStorage.getItem("userId") || undefined);
-
+  const [companyId,setCompanyId] = useState("")
+  const [companyDetail,setCompanyDetail] = useState('');
   const FIREBASE_API_KEY = process.env.REACT_APP_FIREBASE_API_KEY;
 
   // ✅ Load user from storage on startup
@@ -24,6 +26,7 @@ export const AuthProvider = ({ children }) => {
     const refreshToken = localStorage.getItem("refreshToken");
     const expiry = localStorage.getItem("tokenExpiry");
     const storedUser = localStorage.getItem("userData");
+  
 
     if (idToken && refreshToken && expiry && storedUser) {
       setUser(JSON.parse(storedUser));
@@ -32,6 +35,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
+  console.log("user",user)
   // 🔑 Get a valid ID token (refresh if expired)
   const getValidIdToken = async () => {
     const idToken = localStorage.getItem("idToken");
@@ -90,28 +94,47 @@ export const AuthProvider = ({ children }) => {
 
   };
 
+  const fetchComapnayDetails = async() => {
+         try{
+          const res = await getCompanyDetailApi(companyId);
+          if(res.data.success){
+            setCompanyDetail(res.data.company);
+          }
+        
+         }catch(err){
+            console.log(err);
+         }
+  }
   const fetchUserDetails = async () => {
   try {
     setUserLoading(true);
     const userDetails = await getUserDetailsById(userId);
     setUser(userDetails.data.user);
+    setCompanyId(userDetails.data.user.companyId);
     setIsSuperAdmin(userDetails.data.user.role === "admin");
     setIsCompanyAdmin(userDetails.data.user.role === "company_admin");
+
   } catch (error) {
     console.error("Error fetching user details:", error);
   } finally {
     setUserLoading(false);
   }
 };
-
+  console.log("companyDetail", companyDetail);
 
    useEffect(() => {
     if (userId) {
-      console.log("user id" , userId)
       fetchUserDetails();
     }
+
+   
   }, [userId]
   );
+  useEffect(() => {
+    if(companyId){
+      fetchComapnayDetails();
+    }
+  },[companyId])
 
 
   // 🚪 Login user
@@ -130,6 +153,7 @@ export const AuthProvider = ({ children }) => {
     
   };
 
+
   // 🚫 Logout user
   const handleLogout = (message = "You have been logged out.") => {
     localStorage.clear();
@@ -147,7 +171,9 @@ export const AuthProvider = ({ children }) => {
     handleLogout,
     getValidIdToken,
     isSuperAdmin,
-    isCompanyAdmin
+    isCompanyAdmin,
+    companyId,
+    companyDetail
   };
 
   return (

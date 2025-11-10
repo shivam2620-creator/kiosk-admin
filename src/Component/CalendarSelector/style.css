@@ -1,0 +1,101 @@
+.calendar-selector {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.calendar-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: white;
+}
+
+.calendar-dropdown-input {
+  border: 1px solid #555;
+  border-radius: 6px;
+  padding: 10px 12px;
+  background-color: #333;
+  color: #555;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: border-color 0.2s ease;
+  
+}
+
+.calendar-dropdown-input.active {
+  border-color: #ecaa20;
+}
+
+.calendar-arrow {
+  font-size: 12px;
+  color: #666;
+}
+
+.calendar-dropdown-menu {
+  position: absolute;
+  top: 105%;
+  left: 0;
+  width: 100%;
+  background: #333;
+  border: 1px solid #555;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 50;
+}
+
+.calendar-dropdown-search {
+  width: calc(100% - 20px);
+  margin: 8px 10px;
+  padding: 8px;
+  border: 1px solid #555;
+  border-radius: 5px;
+}
+
+.calendar-dropdown-list {
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.calendar-dropdown-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #555;
+  transition: background 0.2s;
+}
+
+.calendar-dropdown-item:hover {
+  background-color: rgba(248, 248, 248, 0.07)
+}
+
+.calendar-dropdown-item.selected {
+  background-color: #ecaa20;
+  color: white;
+}
+
+.calendar-name {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.calendar-type {
+  font-size: 13px;
+  color: #666;
+}
+
+.calendar-dropdown-item.selected .calendar-type {
+  color: #f9f9f9;
+}
+
+.calendar-no-results {
+  text-align: center;
+  padding: 12px;
+  color: #777;
+  font-size: 14px;
+}
+
+.selected-cal {
+    color: white;
+}

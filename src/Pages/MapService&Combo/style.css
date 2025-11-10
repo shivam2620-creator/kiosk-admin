@@ -1,0 +1,129 @@
+.map-service-combo {
+  max-width: 850px;
+  margin: 30px auto;
+  background: #1e1e1e;
+  padding: 24px;
+  border-radius: 10px;
+  color: white;
+      display: flex;
+    flex-direction: column;
+    gap: 20px
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.mapping-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.row.double {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.options-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.option-btn {
+  padding: 8px 14px;
+  border-radius: 6px;
+  background: #333;
+  color: #fff;
+  border: 1px solid #555;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.option-btn:hover {
+  background: #444;
+}
+
+.option-btn.active {
+  background: #ecaa20;
+  color: #000;
+  border-color: #ecaa20;
+  font-weight: 600;
+}
+
+.error {
+  color: #ff4444;
+  font-weight: 600;
+}
+
+.add-btn {
+  margin-top: 10px;
+  padding: 10px;
+  border: none;
+  background: #ecaa20;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.mapping-list {
+  margin-top: 25px;
+  background: #111;
+  padding: 14px 18px;
+  border-radius: 8px;
+}
+
+.mapping-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #333;
+  padding: 6px 0;
+}
+
+.delete-icon {
+  color: #ff5555;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.delete-icon:hover {
+  color: #ff7777;
+  transform: scale(1.15);
+}
+
+.save-btn-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.save-btn {
+  background: var(--button-color);
+  color: white;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.save-btn:hover {
+  opacity: .7;
+}
+
+.save-btn:disabled {
+  background: #555;
+  color: #999;
+  cursor: not-allowed;
+}

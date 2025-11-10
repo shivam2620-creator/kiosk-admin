@@ -1,5 +1,5 @@
 .create-studio-container {
-  max-width: 600px;
+  max-width: 750px;
   margin: 30px auto;
   padding: 25px 30px;
   background: #222;
@@ -20,6 +20,16 @@
   gap: 18px;
 }
 
+/* 🔹 Two-column layout */
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.form-group.half {
+  flex: 1;
+}
+
 .form-group {
   display: flex;
   flex-direction: column;
@@ -36,16 +46,19 @@
   margin-right: 3px;
 }
 
-.form-group input {
+.form-group input,
+.form-group textarea {
   padding: 10px;
   border-radius: 6px;
   border: 1px solid #555;
   background: #333;
   color: white;
   font-size: 14px;
+  resize: none;
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group textarea:focus {
   border-color: #ECAA20;
   outline: none;
 }
@@ -57,9 +70,9 @@
   color: white !important;
   border: 1px solid #555 !important;
   border-radius: 6px !important;
-  padding: 10px !important;
 }
 
+/* Button */
 .submit-btn {
   background: #ECAA20;
   color: white;

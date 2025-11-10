@@ -1,59 +1,65 @@
 import React, { useEffect, useState } from "react";
 import "./style.css";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import SmallSpinner from "../../Utils/SmallSpinner/SmallSpinner";
 import MediumSpinner from "../../Utils/MediumSpinner/MediumSpinner";
 import { fetchAllStudios } from "../../Utils/fetchAllStudios";
-import { useDispatch } from "react-redux";
 import { useAuth } from "../../Utils/AuthContext";
 import getAllCompanyApi from "../../Apis/SuperAdminApis/getAllCompanyApi";
 import CompanySelector from "../../Component/CompanySelector/CompanySelector";
-
+import { deleteStudioApi } from "../../Apis/CompanyAdminApis/StudiosApis";
+import toast from "react-hot-toast";
 
 const AllStudios = () => {
   const studios = useSelector((state) => state.studio.studioData || []);
   const loading = useSelector((state) => state.studio.loading);
-  const [selectedCompanyId, setSelectedCompanyId]  = useState("");
-
-  const [companies,setCompanies] = useState([])
-  console.log(companies);
-  const dispatch = useDispatch();
-  const {isCompanyAdmin,user,isSuperAdmin} = useAuth(); 
-  
-
+  const [selectedCompanyId, setSelectedCompanyId] = useState("");
+  const { companyId, isCompanyAdmin, user, isSuperAdmin } = useAuth();
+  const [companies, setCompanies] = useState([]);
   const [deletingId, setDeletingId] = useState(null);
+  const dispatch = useDispatch();
 
-   
+  // ✅ Fetch studios
   useEffect(() => {
+    if (isCompanyAdmin) fetchAllStudios(user.companyId, dispatch);
+    if (isSuperAdmin && selectedCompanyId)
+      fetchAllStudios(selectedCompanyId, dispatch);
+  }, [isCompanyAdmin, selectedCompanyId]);
 
-   if(isCompanyAdmin) fetchAllStudios(user.companyId,dispatch); 
-   if(isSuperAdmin) fetchAllStudios(selectedCompanyId,dispatch); 
-
-   
-  },[isCompanyAdmin])
-
-
-
-
-  // ✅ Delete studio
+  // ✅ Delete studio with loader on that row
   const handleDelete = async (studioId) => {
- 
-      setDeletingId(studioId);
-       setTimeout(() => {
- setDeletingId(null);
-       },1000)
-   
-     
-
+    setDeletingId(studioId); // 👈 set loader for this row
+    try {
+      const response = await deleteStudioApi(companyId, studioId);
+      if (response.data.success) {
+        toast.success(response.data.message || "Studio deleted successfully");
+        // 🔁 Refresh studios list after delete
+        if (isCompanyAdmin) fetchAllStudios(user.companyId, dispatch);
+        if (isSuperAdmin && selectedCompanyId)
+          fetchAllStudios(selectedCompanyId, dispatch);
+      } else {
+        toast.error(response.data.message || "Failed to delete studio");
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.error || "Something went wrong");
+    } finally {
+      setDeletingId(null); // 👈 reset loader
+    }
   };
 
   return (
     <div className="studio-list-container">
       <h2 className="studio-table-title">All Studios</h2>
-     { isSuperAdmin &&  <div style={{width: "30%", marginBottom : "20px"}}>
-         <CompanySelector selectedCompanyId={selectedCompanyId} setSelectedCompanyId={setSelectedCompanyId} />
-      </div>}
-      {/* ✅ Show medium spinner outside the table */}
+
+      {isSuperAdmin && (
+        <div style={{ width: "30%", marginBottom: "20px" }}>
+          <CompanySelector
+            selectedCompanyId={selectedCompanyId}
+            setSelectedCompanyId={setSelectedCompanyId}
+          />
+        </div>
+      )}
+
       {loading ? (
         <div className="studio-loading-wrapper">
           <MediumSpinner />
@@ -84,7 +90,9 @@ const AllStudios = () => {
                     <td>{studio.defaultCalendar || "-"}</td>
                     <td>
                       <button
-                        className="studio-delete-btn"
+                        className={`studio-delete-btn ${
+                          deletingId === studio.id ? "disabled" : ""
+                        }`}
                         onClick={() => handleDelete(studio.id)}
                         disabled={deletingId === studio.id}
                       >

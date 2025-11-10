@@ -6,16 +6,19 @@ import {
   FaTimes,
   FaTachometerAlt,
   FaCog,
+  FaUsers
 } from "react-icons/fa";
 import { IoIosCreate, IoIosListBox } from "react-icons/io";
-import { MdOutlineTipsAndUpdates } from "react-icons/md";
+import { MdOutlineTipsAndUpdates,MdMiscellaneousServices } from "react-icons/md";
 import { FaUserPlus } from "react-icons/fa6";
 import { useAuth } from "../../Utils/AuthContext";
 import { FiLogOut } from "react-icons/fi"; 
 import MediumSpinner from "../../Utils/MediumSpinner/MediumSpinner";
+import { GrDocumentUpdate } from "react-icons/gr";
 
 import "./style.css";
 import { DiOnedrive } from "react-icons/di";
+import ProfileModal from "../../Component/ProfileModal/ProfileModal";
 
 
 // ===== Sidebar Options =====
@@ -43,6 +46,12 @@ const sidebarOptions = [
     path: "/all-studios",
     icon: <IoIosListBox size={22} />,
     roles: ["superAdmin", "companyAdmin"], // visible to both
+  },
+  {
+    title: "Ghl Users",
+    path: "/ghl-user-list",
+    icon : <FaUsers  size={22}/>,
+    roles : ["sueprAdmin","companyAdmin"]
   }
 ];
 
@@ -51,7 +60,7 @@ const settingsOptions = [
   {
     title: "Create Studio",
     path: "/settings/create-studio",
-    icon: <FaCog size={20} />,
+    icon: <IoIosCreate size={20} />,
     roles: ["superAdmin", "companyAdmin"], // both
   },
   {
@@ -66,6 +75,18 @@ const settingsOptions = [
     icon: <FaUserPlus size={20} />,
     roles: ["superAdmin"], // only super admin
   },
+  {
+    title :"Map Services & Combo",
+    path: "/settings/map-service-and-combo",
+    icon : <MdMiscellaneousServices size={20}/>,
+    roles : ["superAdmin","companyAdmin"]
+  },
+  {
+    title: "Update Calendar",
+    path: "/settings/update-calendar",
+    icon: <GrDocumentUpdate size={20}/>,
+    roles: ["superAdmin","companyAdmin"]
+  }
 ];
 
 
@@ -73,6 +94,8 @@ const MainLayout = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { isSuperAdmin, isCompanyAdmin, user,userLoading, handleLogout} = useAuth();
+  const [showProfile,setShowProfile] = useState(false);
+  console.log(user)
   
 
   // UI States
@@ -180,12 +203,26 @@ const MainLayout = () => {
           </div>
           
         </nav>
-        <div className="sidebar-logout">
+        <div className="profile-logout-section">
+           <div className="profile-section" onClick={() => setShowProfile(true)}>
+               <div className="profile-img">
+
+               </div>
+               <div className="user-info-section">
+                <p>{user?.name || "-"}</p>
+                <small>{user?.email || "-"}</small>
+               </div>
+
+           </div>
+           <div className="sidebar-logout">
             <button className="sidebar-option logout-btn" onClick={handleLogout}>
               <FiLogOut size={22} />
-              {!isCollapsed && <span>Logout</span>}
+            {!isCollapsed  && "Logout"}
             </button>
           </div>
+
+        </div>
+       
       
       </aside>
 
@@ -213,6 +250,7 @@ const MainLayout = () => {
           </div>
         </main>
       </div>
+      {showProfile && <ProfileModal onClose={() => setShowProfile(false)} />}
     </div>
   );
 };

@@ -11,6 +11,9 @@ import LoginPage from "../Pages/Login/Login";
 import CreateUser from "../Pages/CreateUser/CreateUser";
 import AllStudios from "../Pages/AllStudios/AllStudios";
 import ForgotPassword from "../Pages/ForgotPassword/ForgotPassword";
+import MapServiceAndCombo from "../Pages/MapService&Combo/MapService&Combo";
+import GhlUsersList from "../Pages/GhlUsersList/GhlUsersList";
+import UpdateCalendar from "../Pages/UpdateCalendar/UpdateCalendar";
 
 
 
@@ -19,9 +22,14 @@ const Route = createBrowserRouter([
         path : "/",
         element : <RoleCheck />,
         children : [
+
             {
                 index : true,
                 element : <AdminOptions />
+            },
+            {
+                path : "/ghl-user-list",
+                element : <GhlUsersList />
             },
             {
                 path: "/settings/create-company",
@@ -48,7 +56,18 @@ const Route = createBrowserRouter([
             {
                 path: "/settings/create-user",
                 element: <CreateUser />
+            },
+            {
+                path: "/settings/map-service-and-combo",
+                element: <MapServiceAndCombo />
+
+            },
+            {
+                path: "/settings/update-calendar",
+                element: <UpdateCalendar />
             }
+            
+
 
         ]
     },
