@@ -4,22 +4,22 @@ import { useAuth } from "../../Utils/AuthContext";
 import SmallSpinner from "../../Utils/SmallSpinner/SmallSpinner";
 import "./style.css";
 
-const StudioSelector = ({ selectedStudioId, setSelectedStudioId }) => {
+const StudioSelector = ({ selectedStudioId, setSelectedStudioId,company}) => {
   const [studios, setStudios] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const dropdownRef = useRef(null);
 
-  const { user } = useAuth();
-  const { companyId } = user || {};
+  const { user , isSuperAdmin,companyId } = useAuth();
+ 
 
   useEffect(() => {
     const fetchAllStudio = async () => {
-      if (!companyId) return;
+
       setLoading(true);
       try {
-        const response = await getAllStudiosApi(companyId);
+        const response = await getAllStudiosApi(isSuperAdmin ? company :companyId);
         if (response?.data?.success) {
           setStudios(response.data.studios || []);
         } else {
@@ -31,8 +31,11 @@ const StudioSelector = ({ selectedStudioId, setSelectedStudioId }) => {
         setLoading(false);
       }
     };
-    fetchAllStudio();
-  }, [companyId]);
+    if(company || companyId ){
+ fetchAllStudio();
+    }
+   
+  }, [companyId,company]);
 
   // ✅ Close dropdown when clicking outside
   useEffect(() => {
@@ -58,6 +61,7 @@ const StudioSelector = ({ selectedStudioId, setSelectedStudioId }) => {
   };
 
   const selectedStudio = studios.find((s) => s.id === selectedStudioId);
+  console.log("selected studio", selectedStudio)
   
 
   return (

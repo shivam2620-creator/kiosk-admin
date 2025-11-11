@@ -6,7 +6,6 @@ import { useAuth } from "../../Utils/AuthContext";
 import CompanySelector from "../../Component/CompanySelector/CompanySelector";
 import toast from "react-hot-toast";
 
-const testingCalendarId = "FN6xZNwzren3122Bq1JI";
 
 const UpdateCalendar = () => {
   const { companyId, isSuperAdmin } = useAuth(); // ✅ include isSuperAdmin
@@ -15,7 +14,7 @@ const UpdateCalendar = () => {
   const [loading, setLoading] = useState(false);
 
   // Pre-fill test data
-  const [calendarId, setCalendarId] = useState("FN6xZNwzren3122Bq1JI");
+  const [calendarId, setCalendarId] = useState("");
   const [calendarEmbeddedCode, setCalendarEmbeddedCode] = useState(
     ""
   );
@@ -37,7 +36,7 @@ const UpdateCalendar = () => {
     try {
       setLoading(true);
       const payload = {
-        calendarId: testingCalendarId,
+        calendarId,
         calendarEmbeddedCode,
         calendarPrice: Number(calendarPrice),
       };
@@ -67,7 +66,7 @@ const UpdateCalendar = () => {
       {/* ✅ Company Selector only for Super Admin */}
       {isSuperAdmin && (
         <div className="form-section">
-          <label>Select Company</label>
+          
           <CompanySelector
             setSelectedCompanyId={setSelectedCompanyId}
             selectedCompanyId={selectedCompanyId}

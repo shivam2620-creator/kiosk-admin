@@ -17,7 +17,7 @@ function App() {
  
   useEffect(() => {
     setupAxiosAuth({ getValidIdToken, handleLogout }); 
-    fetchAllCalendar(user?.companyId, dispatch);
+  
 
 
   }, [getValidIdToken, handleLogout]);
