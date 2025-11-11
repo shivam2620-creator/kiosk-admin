@@ -14,6 +14,7 @@ import ForgotPassword from "../Pages/ForgotPassword/ForgotPassword";
 import MapServiceAndCombo from "../Pages/MapService&Combo/MapService&Combo";
 import GhlUsersList from "../Pages/GhlUsersList/GhlUsersList";
 import UpdateCalendar from "../Pages/UpdateCalendar/UpdateCalendar";
+import AllCalendar from "../Pages/AllCalendars/AllCalendar";
 
 
 
@@ -65,6 +66,10 @@ const Route = createBrowserRouter([
             {
                 path: "/settings/update-calendar",
                 element: <UpdateCalendar />
+            },
+            {
+               path: "/all-calendars-list",
+               element : <AllCalendar />
             }
             
 

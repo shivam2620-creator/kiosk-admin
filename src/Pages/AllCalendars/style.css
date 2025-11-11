@@ -1,0 +1,140 @@
+.all-calendar-container {
+  background: #333;
+  color: white;
+  border-radius: 10px;
+  padding: 25px;
+  margin: 20px auto;
+  width: 90%;
+  max-width: 1000px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.all-calendar-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+/* Tabs */
+.calendar-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.tab-btn {
+  background: #444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  background: #555;
+}
+
+.tab-btn.active {
+  background: #ecaa20;
+  color: #fff;
+}
+
+/* Table */
+.calendar-table-wrapper {
+  overflow-x: auto;
+}
+
+.calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.calendar-table th,
+.calendar-table td {
+  border-bottom: 1px solid #555;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.calendar-table th {
+  background: #444;
+  color: #fff;
+  font-weight: 600;
+}
+
+.calendar-table tr:nth-child(even) {
+  background: #3a3a3a;
+}
+
+.calendar-table tr:hover {
+  background: #484848;
+}
+
+/* Name column wrap */
+.calendar-name {
+  max-width: 300px;
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+
+/* Mapped Status */
+.mapped-status {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.mapped-status.mapped {
+  background: #4caf50;
+  color: white;
+}
+
+.mapped-status.unmapped {
+  background: #f44336;
+  color: white;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.page-btn {
+  background: #ecaa20;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.page-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Loader */
+.calendar-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  height: 250px;
+}
+
+.no-data {
+  text-align: center;
+  padding: 20px 0;
+  color: #ccc;
+}

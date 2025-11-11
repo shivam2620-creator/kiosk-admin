@@ -3,7 +3,12 @@ import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import "./style.css";
 
-const CalendarSelector = ({ selectedCalendarId, setSelectedCalendarId }) => {
+const CalendarSelector = ({
+  selectedCalendarId,
+  setSelectedCalendarId,
+  mappingFunctionality = true, // ✅ default true
+  studioId, // ✅ optional
+}) => {
   const allCalendar = useSelector((state) => state.calendar.calendarData);
   const [searchTerm, setSearchTerm] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -31,9 +36,16 @@ const CalendarSelector = ({ selectedCalendarId, setSelectedCalendarId }) => {
     );
   }, [allCalendar, searchTerm]);
 
+  // ✅ Handle calendar selection logic
   const handleSelect = (calendar) => {
-    if (calendar.isMapped) {
-      toast.error("This calendar is already mapped. Please remove mapping first.");
+    // If mapping logic is enabled and it's mapped to ANOTHER studio
+    const isMappedToAnotherStudio =
+      mappingFunctionality &&
+      calendar.isMapped &&
+      calendar.studioId !== studioId;
+
+    if (isMappedToAnotherStudio) {
+      toast.error("This calendar is already mapped to another studio.");
       return;
     }
 
@@ -79,27 +91,36 @@ const CalendarSelector = ({ selectedCalendarId, setSelectedCalendarId }) => {
 
           <div className="calendar-dropdown-list">
             {filteredCalendars.length > 0 ? (
-              filteredCalendars.map((calendar) => (
-                <div
-                  key={calendar.id}
-                  className={`calendar-dropdown-item ${
-                    selectedCalendarId === calendar.id ? "selected" : ""
-                  } ${calendar.isMapped ? "mapped" : ""}`}
-                  onClick={() => handleSelect(calendar)}
-                >
-                  <div className="calendar-info">
-                    <div className="calendar-name">
-                      {calendar.name}
-                      {calendar.isMapped && (
-                        <span className="mapped-badge">Mapped</span>
-                      )}
-                    </div>
-                    <div className="calendar-type">
-                      {calendar.calendarType || "N/A"}
+              filteredCalendars.map((calendar) => {
+                // ✅ Determine if calendar should appear "mapped"
+                const isMappedToAnotherStudio =
+                  mappingFunctionality &&
+                  calendar.isMapped &&
+                  calendar.studioId !== studioId;
+
+                return (
+                  <div
+                    key={calendar.id}
+                    className={`calendar-dropdown-item ${
+                      selectedCalendarId === calendar.id ? "selected" : ""
+                    } ${isMappedToAnotherStudio ? "mapped" : ""}`}
+                    onClick={() => handleSelect(calendar)}
+                  >
+                    <div className="calendar-info">
+                      <div className="calendar-name">
+                        {calendar.name}
+                        {/* ✅ Show badge only if it's mapped to a different studio */}
+                        {isMappedToAnotherStudio && (
+                          <span className="mapped-badge">Mapped</span>
+                        )}
+                      </div>
+                      <div className="calendar-type">
+                        {calendar.calendarType || "N/A"}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             ) : (
               <div className="calendar-no-results">No calendars found</div>
             )}

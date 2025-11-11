@@ -15,7 +15,7 @@ import { useAuth } from "../../Utils/AuthContext";
 import { FiLogOut } from "react-icons/fi"; 
 import MediumSpinner from "../../Utils/MediumSpinner/MediumSpinner";
 import { GrDocumentUpdate } from "react-icons/gr";
-
+import { IoCalendarClear } from "react-icons/io5";
 import "./style.css";
 import { DiOnedrive } from "react-icons/di";
 import ProfileModal from "../../Component/ProfileModal/ProfileModal";
@@ -52,6 +52,12 @@ const sidebarOptions = [
     path: "/ghl-user-list",
     icon : <FaUsers  size={22}/>,
     roles : ["sueprAdmin","companyAdmin"]
+  },
+  {
+    title : "All Calendars",
+    path: "/all-calendars-list",
+    icon : <IoCalendarClear size={22} />,
+    roles : ["superAdmin","companyAdmin"]
   }
 ];
 

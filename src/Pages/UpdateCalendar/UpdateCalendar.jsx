@@ -60,6 +60,7 @@ const UpdateCalendar = () => {
         <CalendarSelector
           selectedCalendarId={calendarId}
           setSelectedCalendarId={setCalendarId}
+          mappingFunctionality= {false}
         />
       </div>
 

@@ -216,6 +216,7 @@ const MapServiceAndCombo = () => {
           <CalendarSelector
             selectedCalendarId={calendarId}
             setSelectedCalendarId={setCalendarId}
+            studioId={selectedStudioId}
           />
 
           {error && <p className="error">{error}</p>}
