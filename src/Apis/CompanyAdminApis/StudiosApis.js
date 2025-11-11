@@ -33,5 +33,18 @@ const removeServiceMappingApi = (studioId, data) => {
   });
 };
 
+const addCalendarApi = (studioId,data) => {
+    return axiosInstance.patch(`studios/${studioId}/add-calendar`,data)
+}
 
-export { removeServiceMappingApi,createStudioApi, getAllStudiosApi,deleteStudioApi,mapServiceAndComboApi,updateCalendarApi, checkServiceAndMappingApi }
+const getStudioAyIdApi = (studioId,companyId) => {
+    return axiosInstance.get(`studios/${studioId}?companyId=${companyId}`)
+}
+
+const removeMappedCalendarApi = (studioId,calendarId) => {
+    return axiosInstance.delete(`studios/${studioId}/calendar/${calendarId}`)
+}
+const updateDefaultCalendarApi = (studioId,data) => {
+    return axiosInstance.patch(`studios/${studioId}/default-calendar`,data)
+}
+export { updateDefaultCalendarApi,removeMappedCalendarApi,getStudioAyIdApi,addCalendarApi, removeServiceMappingApi,createStudioApi, getAllStudiosApi,deleteStudioApi,mapServiceAndComboApi,updateCalendarApi, checkServiceAndMappingApi }

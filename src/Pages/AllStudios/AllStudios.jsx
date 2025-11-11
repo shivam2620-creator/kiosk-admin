@@ -5,9 +5,9 @@ import SmallSpinner from "../../Utils/SmallSpinner/SmallSpinner";
 import MediumSpinner from "../../Utils/MediumSpinner/MediumSpinner";
 import { fetchAllStudios } from "../../Utils/fetchAllStudios";
 import { useAuth } from "../../Utils/AuthContext";
-import getAllCompanyApi from "../../Apis/SuperAdminApis/getAllCompanyApi";
 import CompanySelector from "../../Component/CompanySelector/CompanySelector";
 import { deleteStudioApi } from "../../Apis/CompanyAdminApis/StudiosApis";
+import EditStudioModal from "../../Component/EditStudioPopup/EditStudioModal";
 import toast from "react-hot-toast";
 
 const AllStudios = () => {
@@ -15,8 +15,8 @@ const AllStudios = () => {
   const loading = useSelector((state) => state.studio.loading);
   const [selectedCompanyId, setSelectedCompanyId] = useState("");
   const { companyId, isCompanyAdmin, user, isSuperAdmin } = useAuth();
-  const [companies, setCompanies] = useState([]);
   const [deletingId, setDeletingId] = useState(null);
+  const [editingStudio, setEditingStudio] = useState(null);
   const dispatch = useDispatch();
 
   // ✅ Fetch studios
@@ -28,12 +28,11 @@ const AllStudios = () => {
 
   // ✅ Delete studio with loader on that row
   const handleDelete = async (studioId) => {
-    setDeletingId(studioId); // 👈 set loader for this row
+    setDeletingId(studioId);
     try {
       const response = await deleteStudioApi(companyId, studioId);
       if (response.data.success) {
         toast.success(response.data.message || "Studio deleted successfully");
-        // 🔁 Refresh studios list after delete
         if (isCompanyAdmin) fetchAllStudios(user.companyId, dispatch);
         if (isSuperAdmin && selectedCompanyId)
           fetchAllStudios(selectedCompanyId, dispatch);
@@ -43,7 +42,7 @@ const AllStudios = () => {
     } catch (err) {
       toast.error(err.response?.data?.error || "Something went wrong");
     } finally {
-      setDeletingId(null); // 👈 reset loader
+      setDeletingId(null);
     }
   };
 
@@ -88,7 +87,13 @@ const AllStudios = () => {
                     <td>{studio.location || "-"}</td>
                     <td>{studio.companyId || "-"}</td>
                     <td>{studio.defaultCalendar || "-"}</td>
-                    <td>
+                    <td className="studio-actions">
+                      <button
+                        className={`studio-edit-btn`}
+                        onClick={() => setEditingStudio(studio)}
+                      >
+                        Edit
+                      </button>
                       <button
                         className={`studio-delete-btn ${
                           deletingId === studio.id ? "disabled" : ""
@@ -115,6 +120,15 @@ const AllStudios = () => {
             </tbody>
           </table>
         </div>
+      )}
+
+      {/* 🟢 Edit Calendar Modal */}
+      {editingStudio && (
+        <EditStudioModal
+          selectedStudioId={editingStudio.id}
+          studioName={editingStudio.name}
+          onClose={() => setEditingStudio(null)}
+        />
       )}
     </div>
   );
