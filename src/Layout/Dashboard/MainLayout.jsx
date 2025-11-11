@@ -59,7 +59,7 @@ const sidebarOptions = [
     title: "Ghl Users",
     path: "/ghl-user-list",
     icon : <FaUsers  size={22}/>,
-    roles : ["sueprAdmin","companyAdmin"]
+    roles : ["companyAdmin","superAdmin"]
   },
   {
     title : "All Calendars",

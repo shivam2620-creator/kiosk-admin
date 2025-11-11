@@ -183,3 +183,32 @@
   color: #999;
   cursor: not-allowed;
 }
+
+.company-select-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.reset-btn {
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.reset-btn:hover {
+  background: #c0392b;
+}
+
+.no-company-msg {
+  text-align: center;
+  color: #bbb;
+  font-size: 16px;
+  margin-top: 50px;
+}

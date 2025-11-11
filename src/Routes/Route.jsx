@@ -17,92 +17,82 @@ import UpdateCalendar from "../Pages/UpdateCalendar/UpdateCalendar";
 import AllCalendar from "../Pages/AllCalendars/AllCalendar";
 import AllAppointmentList from "../Pages/AllAppointment/AllAppointmentList";
 import RegisterGhlUser from "../Pages/RegisterGhlUser/RegisterGhlUser";
-
+import RequireRole from "./RequireRole";
+import MainLayout from "../Layout/Dashboard/MainLayout";
 
 
 const Route = createBrowserRouter([
-    {
-        path : "/",
-        element : <RoleCheck />,
-        children : [
+  {
+    path: "/",
+    element: <MainLayout />,
+    children: [
+      { index: true, element: <AdminOptions /> },
 
-            {
-                index : true,
-                element : <AdminOptions />
-            },
-            {
-                path : "/ghl-user-list",
-                element : <GhlUsersList />
-            },
-            {
-                path: "/settings/create-company",
-                element: <CreateCompany />
-            },
-            {
-                path : "/settings/create-studio",
-                element : <CreateStudio />
-            },
+      // Shared (superAdmin + companyAdmin)
+      { path: "/all-appointment", element: <AllAppointmentList /> },
+      { path: "/all-studios", element: <AllStudios /> },
+      { path: "/all-calendars-list", element: <AllCalendar /> },
+      { path: "/settings/create-studio", element: <CreateStudio /> },
+      { path: "/settings/map-service-and-combo", element: <MapServiceAndCombo /> },
+      { path: "/settings/update-calendar", element: <UpdateCalendar /> },
+      { path: "/ghl-user-list", element:  <GhlUsersList />},
 
-            {
-                path: "/update-branding",
-                element: <UpdateBranding />
-            },
-            {
-                path: "/all-studios",
-                element: <AllStudios />
+      // SuperAdmin only (guarded)
+      {
+        path: "/update-branding",
+        element: (
+          <RequireRole role="superAdmin">
+            <UpdateBranding />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/companies-list",
+        element: (
+          <RequireRole role="superAdmin">
+            <AllCompanyList />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/settings/create-company",
+        element: (
+          <RequireRole role="superAdmin">
+            <CreateCompany />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/settings/create-user",
+        element: (
+          <RequireRole role="superAdmin">
+            <CreateUser />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/settings/register-ghl-user",
+        element: (
+          <RequireRole role="superAdmin">
+            <RegisterGhlUser />
+          </RequireRole>
+        ),
+      },
+    ],
+  },
 
-            },
-            {
-                path: "/companies-list",
-                element: <AllCompanyList />
-            },
-            {
-                path: "/settings/create-user",
-                element: <CreateUser />
-            },
-            {
-                path: "/settings/map-service-and-combo",
-                element: <MapServiceAndCombo />
-
-            },
-            {
-                path: "/settings/update-calendar",
-                element: <UpdateCalendar />
-            },
-            {
-               path: "/all-calendars-list",
-               element : <AllCalendar />
-            },{
-                path: "/all-appointment",
-                element: <AllAppointmentList />
-            },{
-                path: "/settings/register-ghl-user",
-                element: <RegisterGhlUser />
-            }
-            
-
-
-        ]
-    },
-    {
-        path: "/auth",
-        element: <AuthLayout />,
-        children: [
-            {
-                index: true,
-                element:  <LoginPage />
-            },
-            {
-                path: "login",
-                element: <LoginPage />
-            },{
-                path: "forgot-password",
-                element: <ForgotPassword />
-                 
-            }
-        ]
-    }
- 
+  // Auth routes
+  {
+    path: "/auth",
+    element: <AuthLayout />,
+    children: [
+      { index: true, element: <LoginPage /> },
+      { path: "login", element: <LoginPage /> },
+      { path: "forgot-password", element: <ForgotPassword /> },
+    ],
+  },
 ]);
 
 export default Route;
+
+

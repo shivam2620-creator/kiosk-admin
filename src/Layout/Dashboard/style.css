@@ -252,6 +252,7 @@
   display: none;
 }
 
+
 /* ====== Responsive (Mobile/Tablet) ====== */
 @media (max-width: 1024px) {
   .sidebar {
