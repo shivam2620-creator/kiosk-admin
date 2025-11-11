@@ -15,6 +15,7 @@ import MapServiceAndCombo from "../Pages/MapService&Combo/MapService&Combo";
 import GhlUsersList from "../Pages/GhlUsersList/GhlUsersList";
 import UpdateCalendar from "../Pages/UpdateCalendar/UpdateCalendar";
 import AllCalendar from "../Pages/AllCalendars/AllCalendar";
+import AllAppointmentList from "../Pages/AllAppointment/AllAppointmentList";
 
 
 
@@ -70,6 +71,9 @@ const Route = createBrowserRouter([
             {
                path: "/all-calendars-list",
                element : <AllCalendar />
+            },{
+                path: "/all-appointment",
+                element: <AllAppointmentList />
             }
             
 

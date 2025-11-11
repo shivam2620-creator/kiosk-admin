@@ -1,32 +1,34 @@
 // AuthContext.jsx
-import { createContext, use, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useRef } from "react";
 import { getUserDetailsById } from "../Apis/AuthApi/AuthApi";
 import { getCompanyDetailApi } from "../Apis/CompanyAdminApis/CompanyApis";
 import toast from "react-hot-toast";
 
-const AuthContext = createContext();
 
+const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [refreshIntervalId, setRefreshIntervalId] = useState(null);
+  const [userId, setUserId] = useState(localStorage.getItem("userId") || undefined);
+  const [companyId, setCompanyId] = useState("");
+  const [companyDetail, setCompanyDetail] = useState(null);
+
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [isCompanyAdmin, setIsCompanyAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [userLoading, setUserLoading] = useState(true);
-  const [userId, setUserId] = useState(localStorage.getItem("userId") || undefined);
-  const [companyId,setCompanyId] = useState("")
-  const [companyDetail,setCompanyDetail] = useState('');
+
+  const refreshIntervalRef = useRef(null);
+
   const FIREBASE_API_KEY = process.env.REACT_APP_FIREBASE_API_KEY;
 
-  // ✅ Load user from storage on startup
+  // ✅ Load user from localStorage on startup
   useEffect(() => {
     const idToken = localStorage.getItem("idToken");
     const refreshToken = localStorage.getItem("refreshToken");
     const expiry = localStorage.getItem("tokenExpiry");
     const storedUser = localStorage.getItem("userData");
-  
 
     if (idToken && refreshToken && expiry && storedUser) {
       setUser(JSON.parse(storedUser));
@@ -35,8 +37,54 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  console.log("user",user)
-  // 🔑 Get a valid ID token (refresh if expired)
+  // ✅ Fetch user details
+  const fetchUserDetails = async () => {
+    if (!userId) return;
+    let isMounted = true;
+    try {
+      setUserLoading(true);
+      const userDetails = await getUserDetailsById(userId);
+      if (!isMounted) return;
+      const fetchedUser = userDetails?.data?.user;
+      if (fetchedUser) {
+        setUser(fetchedUser);
+        setCompanyId(fetchedUser.companyId);
+        setIsSuperAdmin(fetchedUser.role === "admin");
+        setIsCompanyAdmin(fetchedUser.role === "company_admin");
+      }
+    } catch (err) {
+      console.error("Error fetching user details:", err);
+    } finally {
+      if (isMounted) setUserLoading(false);
+    }
+    return () => {
+      isMounted = false;
+    };
+  };
+
+  // ✅ Fetch company details
+  const fetchCompanyDetails = async () => {
+    if (!companyId) return;
+    try {
+      const res = await getCompanyDetailApi(companyId);
+      if (res?.data?.success) {
+        setCompanyDetail(res.data.company);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Effects
+  useEffect(() => {
+    if (userId) fetchUserDetails();
+  }, [userId]);
+
+  useEffect(() => {
+    if (companyId) fetchCompanyDetails();
+  }, [companyId]);
+
+  // ✅ Token Management
   const getValidIdToken = async () => {
     const idToken = localStorage.getItem("idToken");
     const refreshToken = localStorage.getItem("refreshToken");
@@ -45,11 +93,9 @@ export const AuthProvider = ({ children }) => {
     if (idToken && expiry && Date.now() < expiry - 60 * 1000) {
       return idToken;
     }
-
     return await refreshTokenWithFirebase(refreshToken);
   };
 
-  // 🔄 Refresh Token Logic
   const refreshTokenWithFirebase = async (refreshToken) => {
     try {
       const res = await fetch(
@@ -60,14 +106,12 @@ export const AuthProvider = ({ children }) => {
           body: `grant_type=refresh_token&refresh_token=${refreshToken}`,
         }
       );
-
       if (!res.ok) throw new Error("Failed to refresh token");
-      const data = await res.json();
 
+      const data = await res.json();
       localStorage.setItem("idToken", data.id_token);
       localStorage.setItem("refreshToken", data.refresh_token);
       localStorage.setItem("tokenExpiry", Date.now() + data.expires_in * 1000);
-
 
       return data.id_token;
     } catch (err) {
@@ -76,96 +120,54 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // 🕒 Background auto-refresh every minute
   const startTokenRefreshScheduler = (refreshToken) => {
-    if (refreshIntervalId) clearInterval(refreshIntervalId);
+    if (refreshIntervalRef.current) clearInterval(refreshIntervalRef.current);
 
     const id = setInterval(async () => {
       const expiry = localStorage.getItem("tokenExpiry");
       if (!expiry) return;
-
       const remaining = expiry - Date.now();
       if (remaining < 5 * 60 * 1000) {
         await refreshTokenWithFirebase(refreshToken);
       }
     }, 60 * 1000);
 
-    setRefreshIntervalId(id);
-
+    refreshIntervalRef.current = id;
   };
 
-  const fetchComapnayDetails = async() => {
-         try{
-          const res = await getCompanyDetailApi(companyId);
-          if(res.data.success){
-            setCompanyDetail(res.data.company);
-          }
-        
-         }catch(err){
-            console.log(err);
-         }
-  }
-  const fetchUserDetails = async () => {
-  try {
-    setUserLoading(true);
-    const userDetails = await getUserDetailsById(userId);
-    setUser(userDetails.data.user);
-    setCompanyId(userDetails.data.user.companyId);
-    setIsSuperAdmin(userDetails.data.user.role === "admin");
-    setIsCompanyAdmin(userDetails.data.user.role === "company_admin");
-
-  } catch (error) {
-    console.error("Error fetching user details:", error);
-  } finally {
-    setUserLoading(false);
-  }
-};
-  console.log("companyDetail", companyDetail);
-
-   useEffect(() => {
-    if (userId) {
-      fetchUserDetails();
-    }
-
-   
-  }, [userId]
-  );
-  useEffect(() => {
-    if(companyId){
-      fetchComapnayDetails();
-    }
-  },[companyId])
-
-
-  // 🚪 Login user
-  const login = async (tokens,id) => {
+  // ✅ Login
+  const login = async (tokens, id) => {
     localStorage.setItem("idToken", tokens.idToken);
     localStorage.setItem("refreshToken", tokens.refreshToken);
     localStorage.setItem("userId", id);
-    localStorage.setItem(
-      "tokenExpiry",
-      Date.now() + tokens.expiresIn * 1000
-    );
+    localStorage.setItem("tokenExpiry", Date.now() + tokens.expiresIn * 1000);
     setUserId(id);
     startTokenRefreshScheduler(tokens.refreshToken);
-   
-    
-    
   };
 
-
-  // 🚫 Logout user
+  // ✅ Logout — now fully safe
   const handleLogout = (message = "You have been logged out.") => {
-    localStorage.clear();
-    clearInterval(refreshIntervalId);
-    setUser(null);
-    toast.error(message);
-    setTimeout(() => (window.location.href = "/auth/login"), 800);
+    try {
+      clearInterval(refreshIntervalRef.current);
+      localStorage.clear();
+
+      setUser(null);
+      setUserId(null);
+      setCompanyId(null);
+      setCompanyDetail(null);
+      setIsSuperAdmin(false);
+      setIsCompanyAdmin(false);
+
+      toast.error(message);
+      window.location.href = "/auth/login";
+    } catch (err) {
+      console.error("Logout error:", err);
+    }
   };
 
+  // ✅ Context value
   const value = {
     user,
-    loading,
     userLoading,
     login,
     handleLogout,
@@ -173,7 +175,7 @@ export const AuthProvider = ({ children }) => {
     isSuperAdmin,
     isCompanyAdmin,
     companyId,
-    companyDetail
+    companyDetail,
   };
 
   return (

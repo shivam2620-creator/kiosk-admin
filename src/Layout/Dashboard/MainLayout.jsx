@@ -19,6 +19,7 @@ import { IoCalendarClear } from "react-icons/io5";
 import "./style.css";
 import { DiOnedrive } from "react-icons/di";
 import ProfileModal from "../../Component/ProfileModal/ProfileModal";
+import { FaTable } from "react-icons/fa";
 
 
 // ===== Sidebar Options =====
@@ -28,6 +29,13 @@ const sidebarOptions = [
     path: "/",
     icon: <FaTachometerAlt size={22} />,
     roles: ["superAdmin", "companyAdmin"], // visible to both
+  },
+  {
+    title : "Appointments",
+    path: "/all-appointment",
+    icon : <FaTable size={22}/>,
+
+    roles: ["superAdmin", "companyAdmin"],
   },
   {
     title: "Update Branding",
