@@ -100,6 +100,11 @@ const settingsOptions = [
     path: "/settings/update-calendar",
     icon: <GrDocumentUpdate size={20}/>,
     roles: ["superAdmin","companyAdmin"]
+  },
+  {
+    title : "Register Ghl User",
+    path:"/settings/register-ghl-user",
+    roles : ["superAdmin"]
   }
 ];
 

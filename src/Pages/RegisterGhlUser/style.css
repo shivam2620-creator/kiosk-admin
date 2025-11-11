@@ -1,0 +1,58 @@
+.register-ghl-container {
+  background: #2c2c2c;
+  color: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 600px;
+  margin: 30px auto;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+}
+
+h2 {
+  text-align: center;
+  color: white;
+  margin-bottom: 25px;
+}
+
+.form-section {
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-section label, .form-section.company-selector label {
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+select,
+input {
+  background: #3a3a3a;
+  border: 1px solid #555;
+  color: white;
+  border-radius: 6px;
+  padding: 8px 10px;
+  outline: none;
+}
+
+select:focus,
+input:focus {
+  border-color: #ecaa20;
+}
+
+.register-btn {
+  width: 100%;
+  padding: 10px;
+  background: #ecaa20;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.register-btn:hover {
+  background: #ffb833;
+}
