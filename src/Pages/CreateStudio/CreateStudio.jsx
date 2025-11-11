@@ -5,9 +5,8 @@ import CalendarSelector from "../../Component/CalendarSelector/CalendarSelector"
 import { createStudioApi } from "../../Apis/CompanyAdminApis/StudiosApis";
 import { useAuth } from "../../Utils/AuthContext";
 import SmallSpinner from "../../Utils/SmallSpinner/SmallSpinner";
-import StudioSelector from "../../Component/StudioSelector/StudioSelector";
-import "./style.css";
 import toast from "react-hot-toast";
+import "./style.css";
 
 const CreateStudio = () => {
   const [form, setForm] = useState({
@@ -17,60 +16,94 @@ const CreateStudio = () => {
     phone: "",
     clientConsentForm: "",
     staffConsentForm: "",
-    calendarId : []
+    calendars: [], // ✅ store multiple calendars
   });
- const {user} = useAuth();
 
+  const { user } = useAuth();
+  const [selectedCalendarId, setSelectedCalendarId] = useState("");
   const [defaultCalendarId, setDefaultCalendarId] = useState("");
-  const[loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const isFormValid =
     form.name.trim() &&
     form.email.trim() &&
     form.location.trim() &&
     form.phone.trim() &&
-    form.clientConsentForm.trim()&&
-    form.staffConsentForm.trim()
+    form.clientConsentForm.trim() &&
+    form.staffConsentForm.trim() &&
+    form.calendars.length > 0 &&
+    defaultCalendarId.trim();
 
+  // ✅ handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  // ✅ add calendar
+  const handleAddCalendar = () => {
+    if (!selectedCalendarId) return toast.error("Please select a calendar first.");
+    if (form.calendars.includes(selectedCalendarId))
+      return toast.error("This calendar is already added.");
+
+    setForm((prev) => ({
+      ...prev,
+      calendars: [...prev.calendars, selectedCalendarId],
+    }));
+    setSelectedCalendarId("");
+  };
+
+  // ✅ remove calendar
+  const handleRemoveCalendar = (id) => {
+    if (id === defaultCalendarId)
+      return toast.error("You cannot remove the default calendar.");
+    setForm((prev) => ({
+      ...prev,
+      calendars: prev.calendars.filter((c) => c !== id),
+    }));
+  };
+
+  // ✅ handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-     try{
-      setLoading(true)
-      const response = await createStudioApi(user.companyId,{...form,defaultCalendar: defaultCalendarId})
-     
-      if(response?.data?.success){
-         toast.success(response?.data?.message);
-         setDefaultCalendarId("");
-         setForm({
-    name: "",
-    email: "",
-    location: "",
-    phone: "",
-    clientConsentForm: "",
-    staffConsentForm: "",
-  })
 
+    try {
+      setLoading(true);
+      const payload = {
+        ...form,
+        defaultCalendar: defaultCalendarId,
+      };
+
+      const response = await createStudioApi(user.companyId, payload);
+
+      if (response?.data?.success) {
+        toast.success(response?.data?.message || "Studio created successfully!");
+        // Reset form
+        setForm({
+          name: "",
+          email: "",
+          location: "",
+          phone: "",
+          clientConsentForm: "",
+          staffConsentForm: "",
+          calendars: [],
+        });
+        setDefaultCalendarId("");
+        setSelectedCalendarId("");
       }
-     }catch(err){
-         if(err?.response?.data?.success === false){
-             toast.error(err?.response?.data?.error)
-         }else{
-          toast.err('something went wrong try again')
-         }
-     }finally{
+    } catch (err) {
+      console.log(err);
+      if (err?.response?.data?.error) toast.error(err.response.data.error);
+      else toast.error("Something went wrong. Please try again.");
+    } finally {
       setLoading(false);
-     }
-    
+    }
   };
 
   return (
     <div className="create-studio-container">
       <h2>Create Studio</h2>
+
       <form className="create-studio-form" onSubmit={handleSubmit}>
         {/* Row 1: Name + Email */}
         <div className="form-row">
@@ -131,15 +164,64 @@ const CreateStudio = () => {
 
         {/* Calendar Selector */}
         <div className="form-group">
-          <CalendarSelector
-            selectedCalendarId={defaultCalendarId}
-            setSelectedCalendarId={setDefaultCalendarId}
-          />
+         
+          <div className="calendar-select-row">
+            <CalendarSelector
+              selectedCalendarId={selectedCalendarId}
+              setSelectedCalendarId={setSelectedCalendarId}
+            />
+            <button
+              type="button"
+              onClick={handleAddCalendar}
+              className="add-calendar-btn"
+            >
+              Add
+            </button>
+          </div>
         </div>
+
+        {/* Show selected calendars */}
+        {form.calendars.length > 0 && (
+          <div className="selected-calendars">
+            <h4>Selected Calendars</h4>
+            <ul>
+              {form.calendars.map((cal) => (
+                <li key={cal} className="calendar-item">
+                  <span>
+                    {cal}
+                    {cal === defaultCalendarId && (
+                      <span className="default-badge">Default</span>
+                    )}
+                  </span>
+                  <div>
+                    {cal !== defaultCalendarId && (
+                      <button
+                        type="button"
+                        className="make-default-btn"
+                        onClick={() => setDefaultCalendarId(cal)}
+                      >
+                        Make Default
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      className="remove-calendar-btn"
+                      onClick={() => handleRemoveCalendar(cal)}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* Consent Form Fields */}
         <div className="form-group">
-          <label><span className="required">*</span>Client Consent Form:</label>
+          <label>
+            <span className="required">*</span> Client Consent Form:
+          </label>
           <textarea
             name="clientConsentForm"
             value={form.clientConsentForm}
@@ -150,7 +232,9 @@ const CreateStudio = () => {
         </div>
 
         <div className="form-group">
-          <label><span className="required">*</span>Staff Consent Form:</label>
+          <label>
+            <span className="required">*</span> Staff Consent Form:
+          </label>
           <textarea
             name="staffConsentForm"
             value={form.staffConsentForm}
@@ -166,7 +250,7 @@ const CreateStudio = () => {
           disabled={!isFormValid || loading}
         >
           {loading && <SmallSpinner />}
-          {loading ?  "Creating...." : "Create Studio"}
+          {loading ? "Creating..." : "Create Studio"}
         </button>
       </form>
     </div>

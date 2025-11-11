@@ -47,4 +47,8 @@ const removeMappedCalendarApi = (studioId,calendarId) => {
 const updateDefaultCalendarApi = (studioId,data) => {
     return axiosInstance.patch(`studios/${studioId}/default-calendar`,data)
 }
-export { updateDefaultCalendarApi,removeMappedCalendarApi,getStudioAyIdApi,addCalendarApi, removeServiceMappingApi,createStudioApi, getAllStudiosApi,deleteStudioApi,mapServiceAndComboApi,updateCalendarApi, checkServiceAndMappingApi }
+
+const updateStudioFormApi = (studioId,data) => {
+    return axiosInstance.put(`/studios/${studioId}`,data)
+}
+export { updateStudioFormApi,updateDefaultCalendarApi,removeMappedCalendarApi,getStudioAyIdApi,addCalendarApi, removeServiceMappingApi,createStudioApi, getAllStudiosApi,deleteStudioApi,mapServiceAndComboApi,updateCalendarApi, checkServiceAndMappingApi }

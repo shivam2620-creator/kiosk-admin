@@ -5,6 +5,7 @@ import {
   getStudioAyIdApi,
   removeMappedCalendarApi,
   updateDefaultCalendarApi,
+  updateStudioFormApi,
 } from "../../Apis/CompanyAdminApis/StudiosApis";
 import { useAuth } from "../../Utils/AuthContext";
 import toast from "react-hot-toast";
@@ -19,6 +20,12 @@ const EditStudioModal = ({ selectedStudioId, studioName, onClose }) => {
   const [studioDetails, setStudioDetails] = useState(null);
   const [selectedCalendarId, setSelectedCalendarId] = useState("");
 
+  // ✅ NEW state for consent form editing
+  const [showConsentForm, setShowConsentForm] = useState(false);
+  const [clientConsentForm, setClientConsentForm] = useState("");
+  const [staffConsentForm, setStaffConsentForm] = useState("");
+  const [formChanged, setFormChanged] = useState(false);
+
   // ✅ Fetch studio details on mount
   const fetchStudioDetails = async () => {
     try {
@@ -26,10 +33,12 @@ const EditStudioModal = ({ selectedStudioId, studioName, onClose }) => {
       const res = await getStudioAyIdApi(selectedStudioId, companyId);
       if (res?.data?.studio) {
         setStudioDetails(res.data.studio);
-      } 
+        setClientConsentForm(res.data.studio.clientConsentForm || "");
+        setStaffConsentForm(res.data.studio.staffConsentForm || "");
+      }
     } catch (err) {
       console.log(err);
-
+      toast.error("Failed to load studio details");
     } finally {
       setLoading(false);
     }
@@ -116,6 +125,31 @@ const EditStudioModal = ({ selectedStudioId, studioName, onClose }) => {
     }
   };
 
+  // ✅ Update Consent Form Data
+  const handleUpdateConsentForm = async () => {
+    if (!formChanged) return toast("No changes to save.");
+
+    try {
+      setSaving(true);
+      const res = await updateStudioFormApi(selectedStudioId, {
+        clientConsentForm,
+        staffConsentForm,
+      });
+      if (res?.data?.success) {
+        toast.success("Consent forms updated successfully!");
+        setFormChanged(false);
+        await fetchStudioDetails();
+      } else {
+        toast.error(res.data.message || "Failed to update consent forms.");
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Error updating consent forms.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="modal-overlay">
@@ -191,6 +225,55 @@ const EditStudioModal = ({ selectedStudioId, studioName, onClose }) => {
               ➕ Add Calendar
             </button>
           </div>
+
+          {/* ✅ Toggle to show Client/Staff Consent Form */}
+          <hr className="divider" />
+          <button
+            className="consent-toggle-btn"
+            onClick={() => setShowConsentForm((prev) => !prev)}
+          >
+            {showConsentForm
+              ? "Hide Consent Form Settings"
+              : "Edit Client & Staff Consent Forms"}
+          </button>
+
+          {showConsentForm && (
+            <div className="consent-form-section">
+              <div className="form-group">
+                <label>Client Consent Form</label>
+                <textarea
+                  value={clientConsentForm}
+                  onChange={(e) => {
+                    setClientConsentForm(e.target.value);
+                    setFormChanged(true);
+                  }}
+                  rows="4"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Staff Consent Form</label>
+                <textarea
+                  value={staffConsentForm}
+                  onChange={(e) => {
+                    setStaffConsentForm(e.target.value);
+                    setFormChanged(true);
+                  }}
+                  rows="4"
+                />
+              </div>
+
+              {formChanged && (
+                <button
+                  onClick={handleUpdateConsentForm}
+                  className="save-consent-btn"
+                  disabled={saving}
+                >
+                  {saving ? "Saving..." : "Save Forms"}
+                </button>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="modal-footer">
@@ -198,7 +281,11 @@ const EditStudioModal = ({ selectedStudioId, studioName, onClose }) => {
             Close
           </button>
         </div>
+         <div className="close-modal-button" onClick={onClose}>
+        x
       </div>
+      </div>
+     
     </div>
   );
 };
