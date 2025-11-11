@@ -127,3 +127,35 @@ h2 {
   color: #999;
   cursor: not-allowed;
 }
+
+.edit-mapping-btn {
+  background-color: #f4b400;
+  color: #fff;
+  max-width: 200px;
+  width: 100%;
+  padding: 6px 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-mapping-btn:hover {
+  background-color: #e19b00;
+}
+/* 🔴 Warning below combination */
+.already-mapped-warning {
+  background-color: #ffe5e5;
+  color: #d32f2f;
+  border: 1px solid #f5b5b5;
+  padding: 6px 10px;
+  border-radius: 5px;
+  margin-top: 8px;
+  font-size: 13px;
+  display: inline-block;
+  font-weight: 500;
+}
+
+

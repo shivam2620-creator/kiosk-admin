@@ -4,21 +4,65 @@ import StudioSelector from "../../Component/StudioSelector/StudioSelector";
 import CalendarSelector from "../../Component/CalendarSelector/CalendarSelector";
 import { getAllServiceCombination } from "../../Apis/CompanyAdminApis/CompanyApis";
 import DynamicOptionSelector from "../../Component/DynamicOptionSelector/DynamicOptionSelector";
-import { mapServiceAndComboApi } from "../../Apis/CompanyAdminApis/StudiosApis";
+import { removeMappedUserApi } from "../../Apis/CompanyAdminApis/CompanyApis";
+import { removeServiceMappingApi } from "../../Apis/CompanyAdminApis/StudiosApis";
+import {
+  checkServiceAndMappingApi,
+  mapServiceAndComboApi,
+} from "../../Apis/CompanyAdminApis/StudiosApis";
 import { useAuth } from "../../Utils/AuthContext";
-import toast from "react-hot-toast"; // ✅ for notifications
+import toast from "react-hot-toast";
 import "./style.css";
 
 const MapServiceAndCombo = () => {
   const [loading, setLoading] = useState(false);
-  const [saving, setSaving] = useState(false); // ✅ new state
+  const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [selectedStudioId, setSelectedStudioId] = useState("");
   const [combinations, setCombinations] = useState([]);
   const { companyId } = useAuth();
   const [selectedCombo, setSelectedCombo] = useState({});
-  const [calendarId, setCalendarId] = useState("");
+  const [calendarId, setCalendarId] = useState("FN6xZNwzren3122Bq1JI");
   const [mappings, setMappings] = useState([]);
   const [error, setError] = useState("");
+  const [mappingCheckingData, setMappinCheckingData] = useState([]);
+
+  // ✅ Fetch mapping status for selected studio
+  const checkMappingStatus = async () => {
+    try {
+      const res = await checkServiceAndMappingApi(selectedStudioId);
+      if (res.data.success) {
+        setMappinCheckingData(res.data.mappings);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // ✅ Remove existing mapping
+  const removeMapping = async () => {
+    if (!selectedCombo?.flatKey)
+      return toast.error("Please select a combination first.");
+
+    try {
+      setDeleting(true);
+      const res = await removeServiceMappingApi(selectedStudioId, {
+        flatKey: selectedCombo.flatKey,
+      });
+   console.log(res)
+      if (res?.data?.success) {
+        toast.success(res.data.message || "Mapping removed successfully!");
+        await checkMappingStatus(); // refresh mapping data
+      } else {
+        toast.error(res?.data?.error || "Failed to remove mapping.");
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Error removing mapping.");
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -33,31 +77,67 @@ const MapServiceAndCombo = () => {
         setLoading(false);
       }
     };
+
+    if (selectedStudioId) {
+      checkMappingStatus();
+    }
+
     fetchAll();
-  }, []);
+  }, [selectedStudioId]);
 
+  // ✅ Handle Add Mapping
   const handleAddMapping = () => {
-    const { service, subType, attributes } = selectedCombo;
+    const combo = selectedCombo || {};
+    const { service, subType } = combo;
 
-    if (!service || !subType)
-      return setError("⚠️ Please select a valid combination.");
     if (!calendarId) return setError("⚠️ Please select a calendar.");
 
-    const flatKey = Object.entries(attributes || {})
-      .map(([_, v]) => v || "NA")
-      .join("_");
+    // Determine unique flatKey
+    const comboKeyFromApi =
+      combo.flatKey || combo.flat_key || combo.flat || null;
+    let comboKey;
+    if (comboKeyFromApi) {
+      comboKey = comboKeyFromApi;
+    } else {
+      const attrs = combo.attributes || {};
+      const sorted = Object.entries(attrs).sort(([a], [b]) =>
+        a.localeCompare(b)
+      );
+      const attrString = sorted.length
+        ? sorted.map(([k, v]) => `${k}:${v ?? "NA"}`).join("|")
+        : "NO_ATTRS";
+      comboKey = `${service}__${subType}__${attrString}`;
+    }
 
-    const uniqueKey = `${service}_${subType}_${flatKey}`;
+    // ✅ 1. Check if combo already exists in saved mappingCheckingData
+    const existingMapping = mappingCheckingData.find(
+      (m) => m.flatKey === comboKey
+    );
 
-    if (mappings.some((m) => m.flatKey === uniqueKey))
+    if (existingMapping && existingMapping.isMapped) {
+      // 🔸 Already mapped — don’t add, show warning
+      setError("");
+      toast.error("This combination is already mapped.");
+      return;
+    }
+
+    // ✅ 2. Check if it's already in current pending mappings
+    if (mappings.some((m) => m.key === comboKey)) {
       return setError("❌ This mapping already exists.");
+    }
 
-    setMappings([...mappings, { flatKey: uniqueKey, calendarId }]);
+    const newMapping = {
+      key: comboKey,
+      flatKey: comboKey,
+      calendarId,
+    };
+
+    setMappings((prev) => [...prev, newMapping]);
     setError("");
   };
 
-  const handleDelete = (flatKey) =>
-    setMappings((prev) => prev.filter((m) => m.flatKey !== flatKey));
+  const handleDelete = (key) =>
+    setMappings((prev) => prev.filter((m) => m.key !== key));
 
   const createMapping = async () => {
     if (!selectedStudioId)
@@ -68,13 +148,13 @@ const MapServiceAndCombo = () => {
     try {
       setSaving(true);
       const res = await mapServiceAndComboApi(companyId, selectedStudioId, {
-         mappings,
+        mappings,
       });
-      console.log(res)
 
       if (res?.data?.success) {
         toast.success(res.data.message || "Mappings saved successfully!");
         setMappings([]); // clear after save
+        await checkMappingStatus(); // refresh
       } else {
         toast.error(res?.data?.error || "Failed to save mappings.");
       }
@@ -85,6 +165,13 @@ const MapServiceAndCombo = () => {
       setSaving(false);
     }
   };
+
+  // ✅ Check if selected combo is already mapped
+  const isAlreadyMapped =
+    selectedCombo?.flatKey &&
+    mappingCheckingData.some(
+      (m) => m.flatKey === selectedCombo.flatKey && m.isMapped
+    );
 
   return (
     <div className="map-service-combo">
@@ -102,6 +189,30 @@ const MapServiceAndCombo = () => {
             onSelectionChange={setSelectedCombo}
           />
 
+          {/* 🔴 Already mapped warning & remove button */}
+          {isAlreadyMapped && (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+                marginTop: "10px",
+              }}
+            >
+              <div className="already-mapped-warning">
+                This combination is already mapped
+              </div>
+
+              <button
+                onClick={removeMapping}
+                className="edit-mapping-btn"
+                disabled={deleting}
+              >
+                {deleting ? "Removing..." : "Remove Mapping"}
+              </button>
+            </div>
+          )}
+
           <CalendarSelector
             selectedCalendarId={calendarId}
             setSelectedCalendarId={setCalendarId}
@@ -109,9 +220,9 @@ const MapServiceAndCombo = () => {
 
           {error && <p className="error">{error}</p>}
 
-          {calendarId && (
+          {calendarId && !isAlreadyMapped && (
             <button onClick={handleAddMapping} className="add-btn">
-              ➕ Add Mapping
+              Add Mapping
             </button>
           )}
         </>
@@ -121,16 +232,15 @@ const MapServiceAndCombo = () => {
         <div className="mapping-list">
           <h3>Created Mappings</h3>
           {mappings.map((m) => (
-            <div key={m.flatKey} className="mapping-item">
+            <div key={m.key} className="mapping-item">
               <code>{m.flatKey}</code>
               <FaTrash
                 className="delete-icon"
-                onClick={() => handleDelete(m.flatKey)}
+                onClick={() => handleDelete(m.key)}
               />
             </div>
           ))}
 
-          {/* ✅ Save Button */}
           <div className="save-btn-container">
             <button
               onClick={createMapping}

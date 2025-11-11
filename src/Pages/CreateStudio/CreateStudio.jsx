@@ -5,6 +5,7 @@ import CalendarSelector from "../../Component/CalendarSelector/CalendarSelector"
 import { createStudioApi } from "../../Apis/CompanyAdminApis/StudiosApis";
 import { useAuth } from "../../Utils/AuthContext";
 import SmallSpinner from "../../Utils/SmallSpinner/SmallSpinner";
+import StudioSelector from "../../Component/StudioSelector/StudioSelector";
 import "./style.css";
 import toast from "react-hot-toast";
 
@@ -16,6 +17,7 @@ const CreateStudio = () => {
     phone: "",
     clientConsentForm: "",
     staffConsentForm: "",
+    calendarId : []
   });
  const {user} = useAuth();
 

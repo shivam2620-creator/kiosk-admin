@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 import "./style.css";
 
 const CalendarSelector = ({ selectedCalendarId, setSelectedCalendarId }) => {
@@ -31,6 +32,11 @@ const CalendarSelector = ({ selectedCalendarId, setSelectedCalendarId }) => {
   }, [allCalendar, searchTerm]);
 
   const handleSelect = (calendar) => {
+    if (calendar.isMapped) {
+      toast.error("This calendar is already mapped. Please remove mapping first.");
+      return;
+    }
+
     setSelectedCalendarId(calendar.id);
     setDropdownOpen(false);
   };
@@ -41,12 +47,12 @@ const CalendarSelector = ({ selectedCalendarId, setSelectedCalendarId }) => {
 
   return (
     <div className="calendar-selector" ref={dropdownRef}>
-      <label className="calendar-label"><span className="required">*</span>Select Calendar:</label>
+      <label className="calendar-label">
+        <span className="required">*</span>Select Calendar:
+      </label>
 
       <div
-        className={`calendar-dropdown-input ${
-          dropdownOpen ? "active" : ""
-        }`}
+        className={`calendar-dropdown-input ${dropdownOpen ? "active" : ""}`}
         onClick={() => setDropdownOpen(!dropdownOpen)}
       >
         {selectedCalendar ? (
@@ -78,12 +84,19 @@ const CalendarSelector = ({ selectedCalendarId, setSelectedCalendarId }) => {
                   key={calendar.id}
                   className={`calendar-dropdown-item ${
                     selectedCalendarId === calendar.id ? "selected" : ""
-                  }`}
+                  } ${calendar.isMapped ? "mapped" : ""}`}
                   onClick={() => handleSelect(calendar)}
                 >
-                  <div className="calendar-name">{calendar.name}</div>
-                  <div className="calendar-type">
-                    {calendar.calendarType || "N/A"}
+                  <div className="calendar-info">
+                    <div className="calendar-name">
+                      {calendar.name}
+                      {calendar.isMapped && (
+                        <span className="mapped-badge">Mapped</span>
+                      )}
+                    </div>
+                    <div className="calendar-type">
+                      {calendar.calendarType || "N/A"}
+                    </div>
                   </div>
                 </div>
               ))

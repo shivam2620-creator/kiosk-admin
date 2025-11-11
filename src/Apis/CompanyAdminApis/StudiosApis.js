@@ -15,13 +15,23 @@ const deleteStudioApi = (companyId,studioId) => {
 }
 
 const mapServiceAndComboApi = (companyId,studioId,data) => {
-     return axiosInstance.post(`/studios/${companyId}/map-service/${studioId}`,data)
+     return axiosInstance.post(`/studios/service-mapping/${studioId}`,data)
 }
 
 const updateCalendarApi = (companyId,data) => {
     return axiosInstance.post(`studios/${companyId}/calendar`,data)
 }
 
+const checkServiceAndMappingApi = (studioId) =>{
+    return axiosInstance.get(`studios/service-mapping/${studioId}`)
+}
 
 
-export { createStudioApi, getAllStudiosApi,deleteStudioApi,mapServiceAndComboApi,updateCalendarApi }
+const removeServiceMappingApi = (studioId, data) => {
+  return axiosInstance.delete(`/studios/service-mapping/${studioId}`, {
+    data: data,
+  });
+};
+
+
+export { removeServiceMappingApi,createStudioApi, getAllStudiosApi,deleteStudioApi,mapServiceAndComboApi,updateCalendarApi, checkServiceAndMappingApi }
