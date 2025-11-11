@@ -10,8 +10,7 @@ import "./style.css";
 
 const GhlUsersList = () => {
   const { user } = useAuth();
-  const companyId = user?.compnayId;
-
+  const {companyId} = useAuth();
   const [allUsers, setAllUsers] = useState([]);
   const [mappedUsers, setMappedUsers] = useState([]);
   const [unMappedUsers, setUnMappedUsers] = useState([]);
@@ -26,6 +25,7 @@ const GhlUsersList = () => {
   const fetchGhlUser = async () => {
     try {
       const res = await getAllGhlUsersApi(companyId);
+      console.log(res)
       if (res.data.success) {
         const users = res.data.users || [];
         setAllUsers(users);
@@ -39,7 +39,7 @@ const GhlUsersList = () => {
         setUnMappedUsers(unmapped);
       }
     } catch (err) {
-      console.error(err);
+      console.log(err);
     }
   };
 

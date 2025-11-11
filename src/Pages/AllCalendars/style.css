@@ -130,7 +130,8 @@
   align-items: center;
   justify-content: center;
   color: white;
-  height: 250px;
+  gap: 10px;
+  height: 90vh
 }
 
 .no-data {

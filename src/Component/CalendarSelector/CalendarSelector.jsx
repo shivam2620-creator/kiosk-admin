@@ -1,19 +1,52 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import { useAuth } from "../../Utils/AuthContext";
+import { getAllCalenderApi } from "../../Apis/CompanyAdminApis/CompanyApis";
+import SmallSpinner from "../../Utils/SmallSpinner/SmallSpinner";
 import "./style.css";
+import { setLoading } from "../../Redux/StudioSlice";
 
 const CalendarSelector = ({
   selectedCalendarId,
   setSelectedCalendarId,
   mappingFunctionality = true, // ✅ default true
   studioId, // ✅ optional
+  company,
+  setCalendarEmbeddedCode,
+  setCalendarPrice
 }) => {
-  const allCalendar = useSelector((state) => state.calendar.calendarData);
+  const [allCalendar,setAllCalendar] = useState([])
   const [searchTerm, setSearchTerm] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const [loading,setLoading] = useState(false);
+  const {companyId,isSuperAdmin} = useAuth();
+  
 
+
+
+  const fetchAllCalendars = async() =>{
+    try{
+      setLoading(true)
+      const res = await getAllCalenderApi(isSuperAdmin ? company : companyId);
+      console.log(res)
+       if(res?.data?.success){
+               setAllCalendar(res.data.calendars)
+          }
+      
+    }catch(err){
+      console.log(err);
+    }finally{
+      setLoading(false)
+    }
+  }
+useEffect(() => {
+  if(companyId || company){
+    fetchAllCalendars();
+  }
+
+},[companyId,company])
   // ✅ Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -48,8 +81,11 @@ const CalendarSelector = ({
       toast.error("This calendar is already mapped to another studio.");
       return;
     }
+    console.log("calendar" , calendar)
 
     setSelectedCalendarId(calendar.id);
+    setCalendarEmbeddedCode(calendar.calendarEmbeddedCode || "")
+    setCalendarPrice(calendar.calendarPrice || 0)
     setDropdownOpen(false);
   };
 

@@ -3,25 +3,32 @@ import "./style.css";
 import CalendarSelector from "../../Component/CalendarSelector/CalendarSelector";
 import updateBrandingApi from "../../Apis/SuperAdminApis/UpdateBrandingApi";
 import { useAuth } from "../../Utils/AuthContext";
+import CompanySelector from "../../Component/CompanySelector/CompanySelector";
 import toast from "react-hot-toast";
 
-const testingCalendarId = "FN6xZNwzren3122Bq1JI"
+const testingCalendarId = "FN6xZNwzren3122Bq1JI";
+
 const UpdateCalendar = () => {
-  const { companyId } = useAuth(); // ✅ fixed typo (was compoanyId)
+  const { companyId, isSuperAdmin } = useAuth(); // ✅ include isSuperAdmin
+
+  const [selectedCompanyId, setSelectedCompanyId] = useState("");
   const [loading, setLoading] = useState(false);
 
   // Pre-fill test data
   const [calendarId, setCalendarId] = useState("FN6xZNwzren3122Bq1JI");
   const [calendarEmbeddedCode, setCalendarEmbeddedCode] = useState(
-    `<iframe src="https://links.tattooagency.com/widget/booking/FN6xZNwzren3122Bq1JI" 
-    style="width: 100%;border:none;overflow: hidden;" 
-    scrolling="no" 
-    id="FN6xZNwzren3122Bq1JI_1761197866711"></iframe><br>
-    <script src="https://links.tattooagency.com/js/form_embed.js" type="text/javascript"></script>`
+    ""
   );
-  const [calendarPrice, setCalendarPrice] = useState(101);
+  const [calendarPrice, setCalendarPrice] = useState("");
 
   const handleUpdate = async () => {
+    const effectiveCompanyId = isSuperAdmin ? selectedCompanyId : companyId; // ✅ pick correct ID
+
+    if (!effectiveCompanyId) {
+      toast.error("Please select a company before updating.");
+      return;
+    }
+
     if (!calendarId || !calendarEmbeddedCode || !calendarPrice) {
       toast.error("Please fill all fields before updating.");
       return;
@@ -30,12 +37,12 @@ const UpdateCalendar = () => {
     try {
       setLoading(true);
       const payload = {
-        calendarId : testingCalendarId,
+        calendarId: testingCalendarId,
         calendarEmbeddedCode,
         calendarPrice: Number(calendarPrice),
       };
 
-      const response = await updateBrandingApi(companyId, payload);
+      const response = await updateBrandingApi(effectiveCompanyId, payload);
 
       if (response?.data?.success) {
         toast.success(response.data.message || "Calendar updated successfully!");
@@ -50,51 +57,73 @@ const UpdateCalendar = () => {
     }
   };
 
+  const showForm =
+    !isSuperAdmin || (isSuperAdmin && selectedCompanyId); // ✅ Only show rest when company selected
+
   return (
     <div className="update-calendar-container">
       <h2 className="update-calendar-title">Update Calendar Details</h2>
 
-      {/* Calendar ID Selector */}
-      <div className="form-section">
-        <label>Calendar</label>
-        <CalendarSelector
-          selectedCalendarId={calendarId}
-          setSelectedCalendarId={setCalendarId}
-          mappingFunctionality= {false}
-        />
-      </div>
+      {/* ✅ Company Selector only for Super Admin */}
+      {isSuperAdmin && (
+        <div className="form-section">
+          <label>Select Company</label>
+          <CompanySelector
+            setSelectedCompanyId={setSelectedCompanyId}
+            selectedCompanyId={selectedCompanyId}
+          />
+        </div>
+      )}
 
-      {/* Embedded Code */}
-      <div className="form-section">
-        <label>Calendar Embedded Code</label>
-        <textarea
-          value={calendarEmbeddedCode}
-          onChange={(e) => setCalendarEmbeddedCode(e.target.value)}
-          rows="8"
-          className="textarea-input"
-          placeholder="Paste your embedded code here..."
-        />
-      </div>
+      {/* ✅ Show rest of the form only after company selection (Super Admin) OR for normal Company Admin */}
+      {showForm && (
+        <>
+          {/* Calendar ID Selector */}
+          <div className="form-section">
+            <label>Calendar</label>
+            <CalendarSelector
+              selectedCalendarId={calendarId}
+              setSelectedCalendarId={setCalendarId}
+              mappingFunctionality={false}
+              company={selectedCompanyId}
+              setCalendarEmbeddedCode={setCalendarEmbeddedCode}
+              setCalendarPrice={setCalendarPrice}
+            />
+          </div>
 
-      {/* Price */}
-      <div className="form-section">
-        <label>Calendar Price ($)</label>
-        <input
-          type="number"
-          className="text-input"
-          value={calendarPrice}
-          onChange={(e) => setCalendarPrice(e.target.value)}
-        />
-      </div>
+          {/* Embedded Code */}
+          <div className="form-section">
+            <label>Calendar Embedded Code</label>
+            <textarea
+              value={calendarEmbeddedCode}
+              onChange={(e) => setCalendarEmbeddedCode(e.target.value)}
+              rows="8"
+              className="textarea-input"
+              placeholder="Paste your embedded code here..."
+            />
+          </div>
 
-      {/* Submit Button */}
-      <button
-        onClick={handleUpdate}
-        disabled={loading}
-        className="update-btn"
-      >
-        {loading ? "Updating..." : "Update Calendar"}
-      </button>
+          {/* Price */}
+          <div className="form-section">
+            <label>Calendar Price ($)</label>
+            <input
+              type="number"
+              className="text-input"
+              value={calendarPrice}
+              onChange={(e) => setCalendarPrice(e.target.value)}
+            />
+          </div>
+
+          {/* Submit Button */}
+          <button
+            onClick={handleUpdate}
+            disabled={loading}
+            className="update-btn"
+          >
+            {loading ? "Updating..." : "Update Calendar"}
+          </button>
+        </>
+      )}
     </div>
   );
 };
