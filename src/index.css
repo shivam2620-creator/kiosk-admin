@@ -20,7 +20,7 @@ input:-webkit-autofill:active {
   --button-color: #ECAA20;
   --secondary-text-color: #DFDFDF;
   --card-color: #353535;
-  --font-family: 'Poppins', sans-serif;
+  --font-family: 'Termina Test', sans-serif;
   font-family: var(--font-family);
   
 }
