@@ -25,12 +25,12 @@ import { GiArchiveRegister } from "react-icons/gi";
 
 // ===== Sidebar Options =====
 const sidebarOptions = [
-  {
-    title: "Dashboard",
-    path: "/",
-    icon: <FaTachometerAlt size={22} />,
-    roles: ["superAdmin", "companyAdmin"], // visible to both
-  },
+  // {
+  //   title: "Dashboard",
+  //   path: "/",
+  //   icon: <FaTachometerAlt size={22} />,
+  //   roles: ["superAdmin", "companyAdmin"], // visible to both
+  // },
   {
     title : "Appointments",
     path: "/all-appointment",
