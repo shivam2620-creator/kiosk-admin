@@ -148,9 +148,10 @@ export const AuthProvider = ({ children }) => {
   // ✅ Logout — now fully safe
   const handleLogout = (message = "You have been logged out.") => {
     try {
+      window.location.href = "/auth/login";
       clearInterval(refreshIntervalRef.current);
       localStorage.clear();
-
+       
       setUser(null);
       setUserId(null);
       setCompanyId(null);
@@ -159,7 +160,7 @@ export const AuthProvider = ({ children }) => {
       setIsCompanyAdmin(false);
 
       toast.error(message);
-      window.location.href = "/auth/login";
+      
     } catch (err) {
       console.error("Logout error:", err);
     }

@@ -234,7 +234,7 @@ const MainLayout = () => {
 
            </div>
            <div className="sidebar-logout">
-            <button className="sidebar-option logout-btn" onClick={handleLogout}>
+            <button className="sidebar-option logout-btn" onClick={() => handleLogout("You have been logged out.")}>
               <FiLogOut size={22} />
             {!isCollapsed  && "Logout"}
             </button>

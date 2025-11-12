@@ -42,7 +42,7 @@ const Route = createBrowserRouter([
         index: true,
         element: (
           <Suspense fallback={Loading}>
-            <AdminOptions />
+            <AllAppointmentList />
           </Suspense>
         ),
       },
