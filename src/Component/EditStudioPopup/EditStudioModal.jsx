@@ -31,6 +31,10 @@ const EditStudioModal = ({ selectedStudioId, studioName, onClose,company }) => {
   // ✅ Fetch studio details on mount
   const fetchStudioDetails = async () => {
     const actualCompanyId = isSuperAdmin ? company : companyId
+
+    console.log("actual companyId",actualCompanyId)
+    console.log("company",company)
+    console.log(companyId);
     try {
       setLoading(true);
       const res = await getStudioAyIdApi(selectedStudioId, actualCompanyId);

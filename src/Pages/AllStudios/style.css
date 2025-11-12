@@ -1,80 +1,235 @@
-.studio-list-container {
-  padding: 20px;
+/* === AllStudios Dashboard Styling === */
+
+.studio-dashboard-section {
+  background: #1e1e1e;
+  color: #f1f1f1;
+  border-radius: 12px;
+  padding: 24px;
+  margin: 20px;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
+  font-family: var(--second-font-family, "Inter"), sans-serif;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.studio-table-title {
-  font-size: 22px;
-  margin-bottom: 15px;
+/* Header */
+.studio-dashboard-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #2e2e2e;
+  padding-bottom: 12px;
+}
+
+.studio-dashboard-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.studio-dashboard-icon-circle {
+  background: var(--primary-color, #eab308);
+  color: #000;
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.studio-dashboard-title {
+  font-size: 20px;
   font-weight: 600;
-  color: white;
+  margin: 0;
 }
 
-.studio-table-wrapper {
+.studio-dashboard-subtitle {
+  font-size: 13px;
+  color: #aaa;
+  margin: 0;
+}
+
+/* Company selector area */
+.studio-dashboard-company-select {
+  width: 40%;
+  margin-bottom: 18px;
+}
+
+/* Table card */
+.studio-dashboard-table-card {
+  background: #2a2a2a;
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 6px;
+}
+
+/* Responsive wrapper */
+.studio-dashboard-table-wrapper {
   overflow-x: auto;
-  border: 2px solid #444;
   border-radius: 8px;
 }
 
-.studio-table {
+/* Table */
+.studio-dashboard-table {
   width: 100%;
   border-collapse: collapse;
-  background: #333;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  min-width: 900px;
 }
 
-.studio-table th,
-.studio-table td {
-  padding: 12px 15px;
-  border-bottom: 1px solid #424141;
-  text-align: left;
+.studio-dashboard-table th,
+.studio-dashboard-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #3a3a3a;
+  vertical-align: middle;
   font-size: 14px;
 }
 
-.studio-table th {
-  background-color: #333;
-  font-weight: 600;
-  color: rgb(175, 174, 174);
+.studio-dashboard-table th {
+  background: #252525;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+  color: #fff;
 }
 
-.studio-table tr:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+.studio-dashboard-table tr:hover {
+  background: #333;
 }
 
-.studio-actions{
+/* Actions */
+.studio-dashboard-actions {
   display: flex;
-  gap: 10px;
+  gap: 8px;
+  align-items: center;
 }
-/* ✅ Delete Button */
 
-
-.studio-delete-btn,.studio-edit-btn {
-  background: #ff4d4d;
+/* Edit button */
+.studio-dashboard-edit-btn {
+  background: var(--primary-color, #eab308);
   border: none;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 5px;
+  color: #000;
+  border-radius: 6px;
+  padding: 6px 8px;
   cursor: pointer;
-  font-size: 13px;
-  transition: background 0.2s ease;
-}
-.studio-edit-btn{
-  background-color: var(--button-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.studio-delete-btn:hover {
-  background: #e60000;
+/* Delete button */
+.studio-dashboard-delete-btn {
+  background: transparent;
+  color: #fff;
+  border: 1px solid #ef4444;
+  border-radius: 6px;
+  padding: 6px 8px;
+  cursor: pointer;
+  transition: 0.12s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.studio-delete-btn:disabled {
+.studio-dashboard-delete-btn:hover:not(:disabled) {
+  background: #ef4444;
+  color: #000;
+}
+
+.studio-dashboard-delete-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-/* ✅ Medium Spinner Container */
-.studio-loading-wrapper {
+/* Pagination */
+.studio-dashboard-pagination-wrapper {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  height: 200px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.studio-dashboard-pagination {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.studio-dashboard-page-btn {
+  background: var(--primary-color, #eab308);
+  border: none;
+  color: #000;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: 0.12s ease;
+}
+
+.studio-dashboard-page-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.studio-dashboard-page-info {
+  color: #ddd;
+}
+
+/* Rows selector */
+.studio-dashboard-rows-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ccc;
+  font-size: 14px;
+}
+
+.studio-dashboard-rows-selector select {
+  background: #2b2b2b;
+  border: 1px solid #444;
+  color: white;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 14px;
+}
+
+/* Loading state */
+.studio-dashboard-loading {
+  height: calc(60vh);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #ccc;
+}
+
+/* Empty state */
+.studio-dashboard-no-data {
+  text-align: center;
+  color: #aaa;
+  padding: 32px 0;
+  font-size: 15px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 900px) {
+  .studio-dashboard-section {
+    padding: 16px;
+    margin: 12px;
+  }
+
+  .studio-dashboard-table {
+    min-width: 720px;
+  }
+
+  .studio-dashboard-title {
+    font-size: 18px;
+  }
+
+  .studio-dashboard-company-select {
+    width: 100%;
+  }
 }

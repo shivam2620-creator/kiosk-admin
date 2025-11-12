@@ -1,3 +1,4 @@
+/* Overlay / modal (unchanged mostly) */
 .profile-modal {
   position: fixed;
   inset: 0;
@@ -10,6 +11,7 @@
   padding: 20px;
 }
 
+/* Modal box */
 .modal-box {
   background: #333;
   color: #f5f5f5;
@@ -21,8 +23,10 @@
   overflow-y: auto;
   max-height: 90vh;
   position: relative;
+  outline: none; /* focus styles handled on elements */
 }
 
+/* Header */
 .modal-title {
   text-align: center;
   font-size: 26px;
@@ -31,16 +35,17 @@
   color: var(--button-color);
 }
 
-
-
+/* Section headings */
 .section h3 {
   border-left: 4px solid var(--button-color);
   padding-left: 10px;
   margin-bottom: 10px;
   color: var(--button-color);
 }
+
+/* layout */
 .location-section{
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 .info-grid {
@@ -53,9 +58,10 @@
   margin: 0;
   font-size: 15px;
 }
-.info-grid  p strong{
- color : #c5c4c4;
- letter-spacing: 1px;
+
+.info-grid p strong {
+  color: #c5c4c4;
+  letter-spacing: 1px;
 }
 
 .status.active {
@@ -85,31 +91,42 @@
   transition: all 0.2s ease;
 }
 
-.toggle-btn:hover {
-  opacity: .7;
+.toggle-btn:hover,
+.toggle-btn:focus {
+  opacity: .85;
+  outline: none;
 }
 
+/* Fade animation */
 .fade-in {
   animation: fadeIn 0.4s ease-in;
 }
+
+/* Close button */
 .close-profile-btn{
-    position: absolute;
-    color : white;
-    background-color: transparent;
-    border: none;
-    top: 20px;
-    right: 20px;
-    cursor: pointer;
-    
+  position: absolute;
+  color: white;
+  background-color: transparent;
+  border: none;
+  top: 16px;
+  right: 16px;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
+.close-profile-btn:hover,
+.close-profile-btn:focus {
+  background: rgba(255,255,255,0.04);
+}
+
+/* Responsive: smaller screens stack grid into single column */
+@media (max-width: 640px) {
+  .info-grid {
+    grid-template-columns: 1fr;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  .modal-box {
+    padding: 20px;
+    max-width: 96%;
   }
 }

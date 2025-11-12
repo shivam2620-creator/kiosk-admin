@@ -1,190 +1,197 @@
-.create-studio-container {
-  max-width: 750px;
-  margin: 30px auto;
-  padding: 25px 30px;
-  background: #222;
-  color: white;
+/* CreateStudio page — flex-first responsive layout
+   Scoped classes start with cs- to avoid collisions
+*/
+
+/* Page wrapper */
+.cs-page-wrap {
+ 
+
+  padding: 0 18px;
+  
+}
+
+/* Card */
+.cs-card {
+  background: linear-gradient(180deg, #1d1d1d, #262626);
   border-radius: 12px;
-  background-color: #333;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-}
-
-.create-studio-container h2 {
-  text-align: center;
-  color: white;
-  margin-bottom: 25px;
-}
-
-.create-studio-form {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  margin-top: 10px;
-}
-
-/* 🔹 Two-column layout */
-.form-row {
-  display: flex;
-  gap: 20px;
-}
-
-.form-group.half {
-  flex: 1;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.form-group label {
-  font-weight: 600;
-  color: white;
-}
-
-.required {
-  color: red;
-  margin-right: 3px;
-}
-
-.form-group input,
-.form-group textarea {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #555;
-  background: #333;
-  color: white;
-  font-size: 14px;
-  resize: none;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-  border-color: #ECAA20;
-  outline: none;
-}
-
-/* react-phone-input-2 */
-.phone-input, .react-tel-input .form-control {
-  width: 100% !important;
-  background: #333 !important;
-  color: white !important;
-  border: 1px solid #555 !important;
-  border-radius: 6px !important;
-  padding: 20px 48px;
-}
-.react-tel-input .selected-flag{
-  background: #333 !important;
-  border: 1px solid #555 !important;
-}
-.react-tel-input .flag-dropdown{
-  border: 1px solid #555 !important;
-}
-
-
-/* Button */
-.submit-btn {
-  background: #ECAA20;
-  color: white;
-  font-weight: 600;
-  padding: 12px 0;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: opacity 0.3s ease, transform 0.2s ease;
-}
-
-.submit-btn:hover:not(:disabled) {
-  transform: scale(1.03);
-  opacity: 0.9;
-}
-
-.submit-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.calendar-select-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.add-calendar-btn {
-  background: #ecaa20;
-  border: none;
-  color: white;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.2s ease;
-  margin-top: 20px;
-}
-
-.add-calendar-btn:hover {
-  background: #d6961a;
-}
-
-/* Selected Calendar List */
-.selected-calendars {
-  background: #2c2c2c;
-  padding: 12px 15px;
-  border-radius: 8px;
-  margin-top: 10px;
-}
-
-.selected-calendars h4 {
-  margin-bottom: 10px;
+  padding: 20px;
   color: #fff;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.55);
 }
 
-.selected-calendars ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+/* Header */
+.cs-card-header {
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  padding-bottom:12px;
+  margin-bottom:16px;
+}
+.cs-card-header h2{
+  margin:0;
+  font-size:20px;
+  font-weight:700;
+}
+.cs-card-sub{
+  margin:0;
+  color:#bdbdbd;
+  font-size:13px;
 }
 
-.calendar-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #444;
-  color: white;
-  padding: 8px 10px;
-  margin-bottom: 8px;
-  border-radius: 6px;
+/* Body */
+.cs-card-body {
+  margin-top: 8px;
 }
 
-.default-badge {
-  background: #2196f3;
-  color: white;
-  font-size: 11px;
-  margin-left: 8px;
-  padding: 2px 6px;
-  border-radius: 6px;
-  text-transform: uppercase;
+/* Generic row: flex container that wraps */
+.cs-row {
+  display:flex;
+  gap:14px;
+  align-items:flex-start;
+  margin-bottom:14px;
+  flex-wrap:wrap;
 }
 
-.make-default-btn {
-  background: #4caf50;
-  color: white;
+/* Column helpers */
+.cs-col {
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+/* grow columns (will expand) */
+.cs-col--grow {
+  flex: 1 1 320px; /* min width 320, grows to fill */
+  min-width: 240px;
+}
+
+/* auto width */
+.cs-col--auto {
+  flex: 0 0 auto;
+}
+
+/* full width */
+.cs-col--full {
+  flex: 1 1 100%;
+  min-width: 100%;
+}
+
+/* Labels + required */
+.cs-label{ font-size:13px; color:#eaeaea; font-weight:600; }
+.cs-required{ color:#ff6b6b; margin-right:6px; }
+
+/* Inputs */
+input[type="text"],
+input[type="email"],
+.cs-card textarea,
+.cs-card input,
+select,
+.cs-phone-input {
+  background: #2b2b2b;
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #fff;
+  font-size:14px;
+  outline:none;
+  width:100%;
+  box-sizing:border-box;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #eab308;
+  box-shadow: 0 0 0 6px rgba(234,179,24,0.06);
+}
+
+/* Phone input overrides */
+.cs-phone-container { width:100%; }
+.cs-phone-input {
+  background: #2b2b2b !important;
+  border-radius: 8px !important;
+  height:44px !important;
+  padding-left:46px !important;
+  color:#fff !important;
+  border:1px solid rgba(255,255,255,0.04) !important;
+}
+
+/* Calendar row */
+.cs-calendar-row { align-items:center; }
+
+/* Buttons */
+.cs-btn {
+  cursor:pointer;
+  border-radius:8px;
+  padding:8px 12px;
+  font-weight:600;
   border: none;
-  padding: 4px 8px;
-  border-radius: 5px;
-  font-size: 12px;
-  cursor: pointer;
-  margin-right: 6px;
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  justify-content:center;
 }
 
-.remove-calendar-btn {
-  background: #f44336;
-  color: white;
-  border: none;
-  padding: 4px 8px;
-  border-radius: 5px;
-  font-size: 12px;
-  cursor: pointer;
+/* primary add button */
+.cs-add {
+  background: #eab308;
+  color: #000;
+  min-width:84px;
 }
 
+/* small buttons */
+.cs-small { padding:6px 10px; font-size:13px; border-radius:6px; }
+
+/* make default */
+.cs-default-btn { background:#4caf50; color:white; border:none; }
+
+/* remove */
+.cs-remove-btn { background:#ef4444; color:white; border:none; }
+
+/* Submit */
+.cs-submit {
+  background: #eab308;
+  color: #000;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size:15px;
+}
+.cs-submit:disabled {
+  opacity:0.6;
+  cursor:not-allowed;
+}
+
+/* Selected calendars list */
+.cs-selected-wrap { background: rgba(255,255,255,0.02); padding:10px; border-radius:8px; }
+.cs-selected-wrap h4 { margin:0 0 10px 0; color:#bdbdbd; font-size:14px; }
+.cs-calendar-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px; }
+.cs-calendar-item {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px;
+  background:#2b2b2b;
+  border-radius:8px;
+  gap:12px;
+}
+.cs-calendar-left { display:flex; gap:8px; align-items:center; font-weight:600; color:#fff; }
+.cs-default { background:#2196f3; color:white; padding:4px 8px; border-radius:12px; font-size:12px; }
+
+/* Actions area align right */
+.cs-actions { display:flex; justify-content:flex-end; margin-top:6px; }
+
+/* info message */
+.cs-info { background:#2b2b2b; padding:10px; border-radius:8px; color:#e6e6e6; margin-bottom:14px; }
+
+/* responsive behavior */
+@media (max-width: 980px) {
+  .cs-col--grow { min-width: 220px; flex-basis: 100%; }
+  .cs-card { padding:16px; }
+}
+
+/* Very small screens */
+@media (max-width: 520px) {
+  .cs-row { gap:10px; }
+  .cs-btn { padding:8px 10px; }
+  .cs-card { padding:12px; }
+}

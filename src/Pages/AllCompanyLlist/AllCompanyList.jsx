@@ -18,7 +18,7 @@ const AllCompanyList = () => {
 
   const startIndex = (page - 1) * rowsPerPage;
   const currentCompanies = companies.slice(startIndex, startIndex + rowsPerPage);
-  const totalPages = Math.ceil(companies.length / rowsPerPage);
+  const totalPages = Math.max(1, Math.ceil(companies.length / rowsPerPage));
 
   const fetchCompanyDetails = async () => {
     try {
@@ -27,6 +27,7 @@ const AllCompanyList = () => {
       setCompanies(response?.data?.companies || []);
     } catch (err) {
       console.error("Error fetching companies:", err);
+      toast.error("Failed to load companies.");
     } finally {
       setDataLoading(false);
     }
@@ -35,8 +36,9 @@ const AllCompanyList = () => {
   const handleDelete = async (companyId) => {
     try {
       setDeletingId(companyId);
-      const response = await DeleteCompanyApi(companyId);
+      await DeleteCompanyApi(companyId);
       toast.success("Company deleted successfully");
+      // Refresh list after deletion
       await fetchCompanyDetails();
     } catch (err) {
       console.error("Error deleting company:", err);
@@ -53,6 +55,7 @@ const AllCompanyList = () => {
   const handlePageChange = (newPage) => {
     if (newPage < 1 || newPage > totalPages) return;
     setPage(newPage);
+    // Keep page within bounds if rowsPerPage changed
   };
 
   return (
@@ -83,58 +86,61 @@ const AllCompanyList = () => {
           {/* Table */}
           <div className="company-dashboard-table-card">
             {companies.length === 0 ? (
-              <p className="company-dashboard-no-data">No companies found.</p>
+              <div className="company-dashboard-no-data">No companies found.</div>
             ) : (
-              <table className="company-dashboard-table">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Owner</th>
-                    <th>Address</th>
-                    <th>Status</th>
-                    <th>Is Deleted</th>
-                    <th>Setup Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentCompanies.map((company, index) => (
-                    <tr key={company.id || index}>
-                      <td>{company.name || "-"}</td>
-                      <td>{company.email || "-"}</td>
-                      <td>{company.owner || "-"}</td>
-                      <td>{company.address || "-"}</td>
-                      <td>
-                        <span
-                          className={`company-dashboard-status-badge ${
-                            company.status === "active"
-                              ? "company-dashboard-status-active"
-                              : "company-dashboard-status-inactive"
-                          }`}
-                        >
-                          {company.status}
-                        </span>
-                      </td>
-                      <td>{company.isDeleted ? "Yes" : "No"}</td>
-                      <td>{company.setupStatus || "-"}</td>
-                      <td>
-                        <button
-                          className="company-dashboard-delete-btn"
-                          onClick={() => handleDelete(company.id)}
-                          disabled={deletingId === company.id}
-                        >
-                          {deletingId === company.id ? (
-                            <SmallSpinner />
-                          ) : (
-                            <Trash2 size={16} />
-                          )}
-                        </button>
-                      </td>
+              <div className="company-dashboard-table-wrapper">
+                <table className="company-dashboard-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Owner</th>
+                      <th>Address</th>
+                      <th>Status</th>
+                      <th>Is Deleted</th>
+                      <th>Setup Status</th>
+                      <th>Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {currentCompanies.map((company, index) => (
+                      <tr key={company.id || index}>
+                        <td>{company.name || "-"}</td>
+                        <td>{company.email || "-"}</td>
+                        <td>{company.owner || "-"}</td>
+                        <td>{company.address || "-"}</td>
+                        <td>
+                          <span
+                            className={`company-dashboard-status-badge ${
+                              company.status === "active"
+                                ? "company-dashboard-status-active"
+                                : "company-dashboard-status-inactive"
+                            }`}
+                          >
+                            {company.status || "-"}
+                          </span>
+                        </td>
+                        <td>{company.isDeleted ? "Yes" : "No"}</td>
+                        <td>{company.setupStatus || "-"}</td>
+                        <td>
+                          <button
+                            className="company-dashboard-delete-btn"
+                            onClick={() => handleDelete(company.id)}
+                            disabled={deletingId === company.id}
+                            title="Delete company"
+                          >
+                            {deletingId === company.id ? (
+                              <SmallSpinner />
+                            ) : (
+                              <Trash2 size={16} />
+                            )}
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
 
@@ -145,15 +151,17 @@ const AllCompanyList = () => {
                 <button
                   onClick={() => handlePageChange(page - 1)}
                   disabled={page === 1}
+                  className="company-dashboard-page-btn"
                 >
                   ◀ Prev
                 </button>
-                <span>
+                <span className="company-dashboard-page-info">
                   Page <strong>{page}</strong> of {totalPages}
                 </span>
                 <button
                   onClick={() => handlePageChange(page + 1)}
                   disabled={page === totalPages}
+                  className="company-dashboard-page-btn"
                 >
                   Next ▶
                 </button>
@@ -164,7 +172,8 @@ const AllCompanyList = () => {
                 <select
                   value={rowsPerPage}
                   onChange={(e) => {
-                    setRowsPerPage(Number(e.target.value));
+                    const v = Number(e.target.value);
+                    setRowsPerPage(v);
                     setPage(1);
                   }}
                 >

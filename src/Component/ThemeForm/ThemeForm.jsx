@@ -1,11 +1,14 @@
-import { useState } from "react";
-import FontSelector from "../FontSelector/FontSelecotr";
-import LogoUploader from "../LogoUploader/LogoUploader";
+// src/Pages/UpdateBranding/ThemeForm.jsx
+import React, { useState, useEffect, Suspense } from "react";
 import updateBrandingApi from "../../Apis/SuperAdminApis/UpdateBrandingApi";
 import toast from "react-hot-toast";
 import "./style.css";
 
-const themeConfigiration = [
+// lazy import to avoid potential circular import issues at module-eval time
+const FontSelector = React.lazy(() => import("../FontSelector/FontSelecotr"));
+const LogoUploader = React.lazy(() => import("../LogoUploader/LogoUploader"));
+
+const themeConfiguration = [
   { key: "primaryColor", label: "Primary Color" },
   { key: "secondaryColor", label: "Secondary Color" },
   { key: "background", label: "Background Color" },
@@ -16,66 +19,191 @@ const ThemeForm = ({ companyId }) => {
   const [form, setForm] = useState({
     fontFamily: "",
     logoUrl: "",
-    primaryColor: "",
-    secondaryColor: "",
-    background: "",
-    textColor: "",
+    primaryColor: "#ecaa20",
+    secondaryColor: "#2ecc71",
+    background: "#1e1e1e",
+    textColor: "#ffffff",
   });
 
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    // if you'd fetch existing branding, do it here when companyId changes
+    // e.g. fetch current branding and setForm(...)
+  }, [companyId]);
+
   const handleChange = (key, value) => {
-    setForm((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
+    setForm((prev) => ({ ...prev, [key]: value }));
   };
 
+  const handleHexInput = (key, value) => {
+    const v = value.trim();
+    if (!v) {
+      handleChange(key, "");
+      return;
+    }
+    if (v[0] !== "#") handleChange(key, `#${v}`);
+    else handleChange(key, v);
+  };
+
+  const canSave = () =>
+    companyId &&
+    (form.fontFamily || form.logoUrl) &&
+    form.primaryColor &&
+    form.background &&
+    form.textColor;
+
   const handleSubmit = async () => {
+    if (!companyId) return toast.error("No company selected.");
+    if (!canSave())
+      return toast.error("Please provide a font or logo and the main colors.");
+
     try {
-      const response = await updateBrandingApi(companyId, form);
-      if (response?.data?.success) {
-        toast.success(response?.data?.message || "Theme updated successfully");
+      setSaving(true);
+      const payload = {
+        fontFamily: form.fontFamily,
+        logoUrl: form.logoUrl,
+        primaryColor: form.primaryColor,
+        secondaryColor: form.secondaryColor,
+        background: form.background,
+        textColor: form.textColor,
+      };
+
+      const res = await updateBrandingApi(companyId, payload);
+
+      if (res?.data?.success) {
+        toast.success(res.data.message || "Theme updated successfully");
+      } else {
+        toast.error(res?.data?.message || "Failed to update theme");
       }
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to update theme.");
+      console.error("Theme update error:", err);
+      toast.error(err?.response?.data?.error || "Something went wrong");
+    } finally {
+      setSaving(false);
     }
   };
 
   return (
-    <div className="theme-form-container">
-      <h2>Theme Configuration</h2>
+    <div className="tf-wrap">
+      <header className="tf-header">
+        <h2 className="tf-title">Theme Configuration</h2>
+        <p className="tf-sub">Fonts, logo and color system for this company</p>
+      </header>
 
-      <FontSelector
-        onSelect={(fonts) =>
-          setForm((prev) => ({ ...prev, fontFamily: fonts }))
-        }
-      />
+      <div className="tf-card">
+        <div className="tf-grid">
+          <div className="tf-col tf-col--form">
+            {/* Font selector (lazy) */}
+            <div className="tf-field">
+              
+              <Suspense fallback={<div style={{ color: "#ccc" }}>Loading font selector…</div>}>
+                <FontSelector
+                  onSelect={(fonts) =>
+                    setForm((prev) => ({ ...prev, fontFamily: fonts }))
+                  }
+                />
+              </Suspense>
+              <div className="tf-hint">Selected: {form.fontFamily || "—"}</div>
+            </div>
 
-      <LogoUploader
-        onUpload={(url) => setForm((prev) => ({ ...prev, logoUrl: url }))}
-      />
+            {/* Logo uploader (lazy) */}
+            <div className="tf-field">
+             
+              <Suspense fallback={<div style={{ color: "#ccc" }}>Loading logo uploader…</div>}>
+                <LogoUploader
+                  onUpload={(url) => setForm((prev) => ({ ...prev, logoUrl: url }))}
+                />
+              </Suspense>
+              <div className="tf-hint">Uploaded: {form.logoUrl ? "Yes" : "No"}</div>
+            </div>
 
-      <h3>Theme Colors</h3>
-
-      <div className="theme-color-grid">
-        {themeConfigiration.map((item) => (
-          <div key={item.key} className="theme-color-item">
-            <label>
-              <span className="required">*</span> {item.label}
-            </label>
-            <input
-              type="text"
-              placeholder="Enter hex code e.g. #ffffff"
-              value={form[item.key]}
-              onChange={(e) => handleChange(item.key, e.target.value)}
-            />
+            {/* Color inputs */}
+            <div className="tf-field">
+              <label className="tf-label">Theme Colors</label>
+              <div className="tf-color-grid">
+                {themeConfiguration.map((c) => (
+                  <div className="tf-color-item" key={c.key}>
+                    <label className="tf-color-label">{c.label}</label>
+                    <div className="tf-color-picker">
+                      <input
+                        type="color"
+                        value={form[c.key] || "#000000"}
+                        onChange={(e) => handleChange(c.key, e.target.value)}
+                        aria-label={c.label}
+                      />
+                      <input
+                        type="text"
+                        className="tf-hex-input"
+                        placeholder="#ffffff"
+                        value={form[c.key] || ""}
+                        onChange={(e) => handleHexInput(c.key, e.target.value)}
+                      />
+                    </div>
+                    
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-        ))}
-      </div>
 
-      <button onClick={handleSubmit} className="submit-btn">
-        Save Theme
-      </button>
+          {/* Preview: NOTE - fontFamily removed from inline preview (no live font load) */}
+          <aside className="tf-col tf-col--preview">
+            <div
+              className="tf-preview-surface"
+              style={{
+                background: form.background || "#111",
+                color: form.textColor || "#fff",
+                // fontFamily intentionally NOT applied here to remove live font preview
+              }}
+            >
+              <div
+                className="tf-preview-top"
+                style={{ borderBottomColor: form.primaryColor }}
+              >
+                <div className="tf-logo-wrap">
+                  {form.logoUrl ? (
+                    // eslint-disable-next-line jsx-a11y/img-redundant-alt
+                    <img src={form.logoUrl} alt="logo" className="tf-logo" />
+                  ) : (
+                    <div className="tf-logo-placeholder">Logo</div>
+                  )}
+                </div>
+                <div className="tf-preview-title">Company preview</div>
+              </div>
+
+              <div className="tf-preview-body">
+                <p className="tf-p">
+                  This is a live preview. Primary:{" "}
+                  <strong style={{ color: form.primaryColor }}>{form.primaryColor}</strong>
+                </p>
+
+                {/* <div className="tf-button-sample">
+                  <button style={{ background: form.primaryColor }}>Primary</button>
+                  <button style={{ background: form.secondaryColor }}>Secondary</button>
+                </div> */}
+              </div>
+            </div>
+
+            <div className="tf-preview-meta">
+              <div><strong>Primary:</strong> {form.primaryColor}</div>
+              <div><strong>Secondary:</strong> {form.secondaryColor}</div>
+              <div><strong>Background:</strong> {form.background}</div>
+              <div><strong>Text:</strong> {form.textColor}</div>
+            </div>
+          </aside>
+        </div>
+
+        <div className="tf-actions">
+          <button
+            className="tf-save-btn"
+            onClick={handleSubmit}
+            disabled={!canSave() || saving}
+          >
+            {saving ? "Saving…" : "Save Theme"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

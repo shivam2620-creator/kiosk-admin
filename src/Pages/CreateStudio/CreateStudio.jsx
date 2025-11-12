@@ -119,178 +119,166 @@ const CreateStudio = () => {
   };
 
   return (
-    <div className="create-studio-container">
-      <h2>Create Studio</h2>
+    <div className="cs-page-wrap">
+      <div className="cs-card">
+        <header className="cs-card-header">
+          <h2>Create Studio</h2>
+          <p className="cs-card-sub">Create a new studio and configure calendars & consent forms.</p>
+        </header>
 
-      {/* ===== SuperAdmin: Company Selector ===== */}
-      {isSuperAdmin && (
-        <div className="form-group">
-          <CompanySelector
-            selectedCompanyId={selectedCompanyId}
-            setSelectedCompanyId={setSelectedCompanyId}
-          />
-        </div>
-      )}
-
-      {/* ✅ Only show form if:
-          - Company admin (auto companyId)
-          - OR super admin has selected a company
-      */}
-      {selectedCompanyId ? (
-        <form className="create-studio-form" onSubmit={handleSubmit}>
-          {/* Row 1: Name + Email */}
-          <div className="form-row">
-            <div className="form-group half">
-              <label>
-                <span className="required">*</span> Name:
-              </label>
-              <input
-                type="text"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                placeholder="Enter studio name"
+        <div className="cs-card-body">
+          {/* SuperAdmin: Company Selector */}
+          {isSuperAdmin && (
+            <div className="cs-row cs-company-row">
+              <CompanySelector
+                selectedCompanyId={selectedCompanyId}
+                setSelectedCompanyId={setSelectedCompanyId}
               />
-            </div>
-
-            <div className="form-group half">
-              <label>
-                <span className="required">*</span> Email:
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                placeholder="Enter email"
-              />
-            </div>
-          </div>
-
-          {/* Row 2: Phone + Location */}
-          <div className="form-row">
-            <div className="form-group half">
-              <label>
-                <span className="required">*</span> Phone:
-              </label>
-              <PhoneInput
-                country={"in"}
-                value={form.phone}
-                onChange={(phone) => setForm((prev) => ({ ...prev, phone }))}
-                inputClass="phone-input"
-              />
-            </div>
-
-            <div className="form-group half">
-              <label>
-                <span className="required">*</span> Location:
-              </label>
-              <input
-                type="text"
-                name="location"
-                value={form.location}
-                onChange={handleChange}
-                placeholder="Enter location"
-              />
-            </div>
-          </div>
-
-          {/* Calendar Selector */}
-          <div className="form-group">
-            <div className="calendar-select-row">
-              <CalendarSelector
-                selectedCalendarId={selectedCalendarId}
-                setSelectedCalendarId={setSelectedCalendarId}
-                company={selectedCompanyId}
-              />
-              <button
-                type="button"
-                onClick={handleAddCalendar}
-                className="add-calendar-btn"
-              >
-                Add
-              </button>
-            </div>
-          </div>
-
-          {/* Show selected calendars */}
-          {form.calendars.length > 0 && (
-            <div className="selected-calendars">
-              <h4>Selected Calendars</h4>
-              <ul>
-                {form.calendars.map((cal) => (
-                  <li key={cal} className="calendar-item">
-                    <span>
-                      {cal}
-                      {cal === defaultCalendarId && (
-                        <span className="default-badge">Default</span>
-                      )}
-                    </span>
-                    <div>
-                      {cal !== defaultCalendarId && (
-                        <button
-                          type="button"
-                          className="make-default-btn"
-                          onClick={() => setDefaultCalendarId(cal)}
-                        >
-                          Make Default
-                        </button>
-                      )}
-                      <button
-                        type="button"
-                        className="remove-calendar-btn"
-                        onClick={() => handleRemoveCalendar(cal)}
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
             </div>
           )}
 
-          {/* Consent Forms */}
-          <div className="form-group">
-            <label>
-              <span className="required">*</span> Client Consent Form:
-            </label>
-            <textarea
-              name="clientConsentForm"
-              value={form.clientConsentForm}
-              onChange={handleChange}
-              placeholder="Paste client consent form HTML/string..."
-              rows={4}
-            ></textarea>
-          </div>
+          {isSuperAdmin && !selectedCompanyId && (
+            <div className="cs-info">👆 Please select a company to continue.</div>
+          )}
 
-          <div className="form-group">
-            <label>
-              <span className="required">*</span> Staff Consent Form:
-            </label>
-            <textarea
-              name="staffConsentForm"
-              value={form.staffConsentForm}
-              onChange={handleChange}
-              placeholder="Paste staff consent form HTML/string..."
-              rows={4}
-            ></textarea>
-          </div>
+          {(!isSuperAdmin || selectedCompanyId) && (
+            <form className="cs-form" onSubmit={handleSubmit}>
+              {/* top input row (2 columns, expand to fill) */}
+              <div className="cs-row cs-top-row">
+                <div className="cs-col cs-col--grow">
+                  <label className="cs-label"><span className="cs-required">*</span> Name</label>
+                  <input
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    placeholder="Studio name"
+                  />
+                </div>
 
-          <button
-            type="submit"
-            className="submit-btn"
-            disabled={!isFormValid || loading}
-          >
-            {loading && <SmallSpinner />}
-            {loading ? "Creating..." : "Create Studio"}
-          </button>
-        </form>
-      ) : (
-        isSuperAdmin && (
-          <p className="info-text">👆 Please select a company to continue.</p>
-        )
-      )}
+                <div className="cs-col cs-col--grow">
+                  <label className="cs-label"><span className="cs-required">*</span> Email</label>
+                  <input
+                    name="email"
+                    type="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    placeholder="studio@example.com"
+                  />
+                </div>
+              </div>
+
+              {/* phone + location on same row */}
+              <div className="cs-row cs-top-row">
+                <div className="cs-col cs-col--grow">
+                  <label className="cs-label"><span className="cs-required">*</span> Phone</label>
+                  <PhoneInput
+                    country={"in"}
+                    value={form.phone}
+                    onChange={(phone) => setForm((prev) => ({ ...prev, phone }))}
+                    inputClass="cs-phone-input"
+                    containerClass="cs-phone-container"
+                    inputProps={{ "aria-label": "phone" }}
+                  />
+                </div>
+
+                <div className="cs-col cs-col--grow">
+                  <label className="cs-label"><span className="cs-required">*</span> Location</label>
+                  <input
+                    name="location"
+                    value={form.location}
+                    onChange={handleChange}
+                    placeholder="City, state or full address"
+                  />
+                </div>
+              </div>
+
+              {/* calendar selector row */}
+              <div className="cs-row cs-calendar-row">
+                <div className="cs-col cs-col--grow">
+                  <CalendarSelector
+                    selectedCalendarId={selectedCalendarId}
+                    setSelectedCalendarId={setSelectedCalendarId}
+                    company={selectedCompanyId}
+                  />
+                </div>
+                <div className="cs-col cs-col--auto">
+                  <button type="button" className="cs-btn cs-add" onClick={handleAddCalendar}>
+                    Add
+                  </button>
+                </div>
+              </div>
+
+              {/* selected calendars */}
+              {form.calendars.length > 0 && (
+                <div className="cs-selected-wrap">
+                  <h4>Selected Calendars</h4>
+                  <ul className="cs-calendar-list">
+                    {form.calendars.map((cal) => (
+                      <li key={cal} className="cs-calendar-item">
+                        <div className="cs-calendar-left">
+                          <span className="cs-calendar-name">{cal}</span>
+                          {cal === defaultCalendarId && <span className="cs-default">Default</span>}
+                        </div>
+                        <div className="cs-calendar-actions">
+                          {cal !== defaultCalendarId && (
+                            <button
+                              type="button"
+                              className="cs-btn cs-small cs-default-btn"
+                              onClick={() => setDefaultCalendarId(cal)}
+                            >
+                              Make default
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            className="cs-btn cs-small cs-remove-btn"
+                            onClick={() => handleRemoveCalendar(cal)}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* consent forms */}
+              <div className="cs-row">
+                <div className="cs-col cs-col--full">
+                  <label className="cs-label"><span className="cs-required">*</span> Client Consent Form</label>
+                  <textarea
+                    name="clientConsentForm"
+                    value={form.clientConsentForm}
+                    onChange={handleChange}
+                    rows={4}
+                    placeholder="Paste HTML/text for client consent..."
+                  />
+                </div>
+              </div>
+
+              <div className="cs-row">
+                <div className="cs-col cs-col--full">
+                  <label className="cs-label"><span className="cs-required">*</span> Staff Consent Form</label>
+                  <textarea
+                    name="staffConsentForm"
+                    value={form.staffConsentForm}
+                    onChange={handleChange}
+                    rows={4}
+                    placeholder="Paste HTML/text for staff consent..."
+                  />
+                </div>
+              </div>
+
+              <div className="cs-actions">
+                <button type="submit" className="cs-btn cs-submit" disabled={!isFormValid || loading}>
+                  {loading ? <SmallSpinner /> : "Create Studio"}
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

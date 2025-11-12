@@ -4,10 +4,13 @@
   background: #1e1e1e;
   color: #f1f1f1;
   border-radius: 12px;
-  padding: 25px;
- 
+  padding: 24px;
+  margin: 20px;
   box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
   font-family: var(--second-font-family, "Inter"), sans-serif;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Header */
@@ -15,9 +18,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
-  border-bottom: 1px solid #333;
-  padding-bottom: 15px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid #2e2e2e;
+  padding-bottom: 14px;
 }
 
 .company-dashboard-title-wrap {
@@ -37,7 +40,7 @@
 }
 
 .company-dashboard-title {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
   margin: 0;
 }
@@ -48,22 +51,33 @@
   margin: 0;
 }
 
-/* Table */
+/* Table Card */
 .company-dashboard-table-card {
   background: #2a2a2a;
   border-radius: 10px;
   overflow: hidden;
+  padding: 8px;
 }
 
+/* Wrapper provides horizontal scroll on small screens */
+.company-dashboard-table-wrapper {
+  overflow-x: auto;
+  border-radius: 8px;
+}
+
+/* Table */
 .company-dashboard-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 900px; /* helps keep columns readable */
 }
 
 .company-dashboard-table th,
 .company-dashboard-table td {
   padding: 12px 14px;
   border-bottom: 1px solid #3a3a3a;
+  vertical-align: middle;
+  font-size: 14px;
 }
 
 .company-dashboard-table th {
@@ -71,6 +85,8 @@
   text-transform: uppercase;
   font-size: 12px;
   letter-spacing: 0.5px;
+  font-weight: 700;
+  color: #fff;
 }
 
 .company-dashboard-table tr:hover {
@@ -88,31 +104,32 @@
 }
 
 .company-dashboard-status-active {
-  background: #22c55e33;
+  background: #22c55e22;
   color: #22c55e;
 }
 
 .company-dashboard-status-inactive {
-  background: #ef444433;
+  background: #ef444422;
   color: #ef4444;
 }
 
 /* Delete Button */
 .company-dashboard-delete-btn {
-  background: #ef4444;
+  background: transparent;
   color: #fff;
-  border: none;
+  border: 1px solid #ef4444;
   border-radius: 6px;
-  padding: 6px 10px;
+  padding: 6px 8px;
   cursor: pointer;
-  transition: 0.2s ease;
-  display: flex;
+  transition: 0.12s ease;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
-.company-dashboard-delete-btn:hover {
-  opacity: 0.85;
+.company-dashboard-delete-btn:hover:not(:disabled) {
+  background: #ef4444;
+  color: #000;
 }
 
 .company-dashboard-delete-btn:disabled {
@@ -125,9 +142,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 25px;
+  margin-top: 18px;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 12px;
 }
 
 .company-dashboard-pagination {
@@ -136,19 +153,23 @@
   gap: 10px;
 }
 
-.company-dashboard-pagination button {
+.company-dashboard-page-btn {
   background: var(--primary-color, #eab308);
   border: none;
   color: #000;
   border-radius: 6px;
   padding: 6px 12px;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: 0.12s ease;
 }
 
-.company-dashboard-pagination button:disabled {
+.company-dashboard-page-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.company-dashboard-page-info {
+  color: #ddd;
 }
 
 /* Rows Selector */
@@ -171,7 +192,7 @@
 
 /* Loader & Empty States */
 .company-dashboard-loading {
-  height: calc(100vh - 200px);
+  height: calc(60vh);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -184,6 +205,22 @@
 .company-dashboard-no-data {
   text-align: center;
   color: #aaa;
-  padding: 40px 0;
+  padding: 32px 0;
   font-size: 15px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 900px) {
+  .company-dashboard-section {
+    padding: 16px;
+    margin: 12px;
+  }
+
+  .company-dashboard-table {
+    min-width: 720px;
+  }
+
+  .company-dashboard-title {
+    font-size: 18px;
+  }
 }

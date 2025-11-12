@@ -1,75 +1,85 @@
+/* Append / replace in style.css for the modal */
+
+/* Overlay */
 .appointment-modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: rgba(10, 10, 10, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2000;
+  padding: 20px;
 }
-/* Make header sticky */
+
+/* Modal container — this has its own scrolling area so sticky header works */
+.appointment-modal {
+  background: #2b2b2b;
+  color: white;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow-y: auto; /* important for sticky header */
+  padding: 0; /* header has its own padding */
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Sticky Header */
 .sticky-header {
   position: sticky;
   top: 0;
   background: #2b2b2b;
   z-index: 10;
-  padding: 12px 0;
+  padding: 16px 20px;
   border-bottom: 1px solid #444;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* Smaller cross button */
+/* Close button small */
 .close-btn-small {
   background: transparent;
   border: none;
   color: #fff;
   font-size: 18px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: transform 0.15s ease, color 0.15s ease;
+  padding: 6px;
+  border-radius: 6px;
 }
-
-.close-btn-small:hover {
+.close-btn-small:hover,
+.close-btn-small:focus {
   color: #ecaa20;
-  transform: scale(1.2);
+  transform: scale(1.05);
+  outline: none;
 }
 
-
-.appointment-modal {
-  background: #2b2b2b;
-  color: white;
-  border-radius: 10px;
-  width: 85%;
-  max-width: 900px;
-  max-height: 90vh;
-  overflow-y: auto;
-  padding: 25px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.5);
-}
-
-.modal-header {
+/* Loading and no-data sections */
+.loading-section,
+.no-data-section {
+  padding: 28px;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  border-bottom: 1px solid #444;
-  padding-bottom: 10px;
-  margin-bottom: 15px;
+  gap: 12px;
+  text-align: center;
+  color: #cfcfcf;
 }
 
-.close-btn {
-  background: #ecaa20;
-  border: none;
-  color: white;
-  font-size: 20px;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
+/* Modal body content wrapper */
+.appointment-modal > section,
+.appointment-modal > .no-data-section,
+.appointment-modal > .loading-section {
+  padding: 18px 22px;
 }
 
+/* Info section */
 .info-section {
-  margin-bottom: 25px;
+  margin-bottom: 10px;
 }
 
 .info-section h3 {
@@ -79,29 +89,38 @@
   padding-left: 8px;
 }
 
+/* Responsive grid */
 .info-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 10px;
+  align-items: start;
 }
 
+/* QR codes */
 .qr-grid {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
   justify-content: flex-start;
 }
-
 .qr-item {
   text-align: center;
 }
-
 .qr-img {
   width: 120px;
   height: 120px;
   border-radius: 8px;
   background: white;
   padding: 5px;
+  object-fit: contain;
+}
+
+/* File buttons area */
+.button-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .file-btn {
@@ -111,29 +130,46 @@
   background: #3a3a3a;
   padding: 10px;
   border-radius: 8px;
-  margin-bottom: 10px;
 }
 
+/* Buttons */
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   padding: 6px 10px;
   border-radius: 6px;
   font-size: 13px;
   text-decoration: none;
 }
-
 .btn.primary {
   background: #ecaa20;
-  color: white;
+  color: #111;
 }
-
 .btn.secondary {
   background: #555;
   color: white;
 }
+.btn:hover,
+.btn:focus {
+  opacity: 0.95;
+}
 
-.btn:hover {
-  opacity: 0.9;
+/* small responsive tweaks */
+@media (max-width: 700px) {
+  .appointment-modal {
+    max-width: 98%;
+  }
+  .sticky-header {
+    padding: 12px 14px;
+  }
+  .appointment-modal > section,
+  .appointment-modal > .no-data-section,
+  .appointment-modal > .loading-section {
+    padding: 14px 16px;
+  }
+  .qr-img {
+    width: 100px;
+    height: 100px;
+  }
 }
