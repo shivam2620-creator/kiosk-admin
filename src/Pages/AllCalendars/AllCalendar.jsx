@@ -3,6 +3,7 @@ import MediumSpinner from "../../Utils/MediumSpinner/MediumSpinner";
 import { getAllCalenderApi } from "../../Apis/CompanyAdminApis/CompanyApis";
 import { useAuth } from "../../Utils/AuthContext";
 import CompanySelector from "../../Component/CompanySelector/CompanySelector";
+import { CalendarCheck, Layers } from "lucide-react";
 import "./style.css";
 
 const AllCalendar = () => {
@@ -12,7 +13,7 @@ const AllCalendar = () => {
   const [calendars, setCalendars] = useState([]);
   const [activeTab, setActiveTab] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
+  const [rowsPerPage, setRowsPerPage] = useState(8);
 
   // ✅ Fetch all calendar data
   const fetchAllCalendars = async (targetCompanyId) => {
@@ -42,23 +43,28 @@ const AllCalendar = () => {
     }
   }, [selectedCompanyId, isSuperAdmin]);
 
-  // ✅ Filter based on tab
+  // ✅ Filter logic
   const filteredCalendars =
     activeTab === "mapped"
       ? calendars.filter((c) => c.isMapped)
       : calendars;
 
-  // ✅ Pagination Logic
-  const totalPages = Math.ceil(filteredCalendars.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
+  // ✅ Pagination
+  const totalPages = Math.ceil(filteredCalendars.length / rowsPerPage);
+  const startIndex = (currentPage - 1) * rowsPerPage;
   const currentData = filteredCalendars.slice(
     startIndex,
-    startIndex + itemsPerPage
+    startIndex + rowsPerPage
   );
+
+  const handlePageChange = (newPage) => {
+    if (newPage < 1 || newPage > totalPages) return;
+    setCurrentPage(newPage);
+  };
 
   if (loading) {
     return (
-      <div className="calendar-loading">
+      <div className="calendar-dashboard-loading">
         <MediumSpinner />
         <p>Loading Calendars...</p>
       </div>
@@ -66,12 +72,25 @@ const AllCalendar = () => {
   }
 
   return (
-    <div className="all-calendar-container">
-      <h2>All Calendars</h2>
+    <div className="calendar-dashboard-section">
+      {/* Header */}
+      <div className="calendar-dashboard-header">
+        <div className="calendar-dashboard-title-wrap">
+          <div className="calendar-dashboard-icon-circle">
+            <Layers size={20} />
+          </div>
+          <div>
+            <h2 className="calendar-dashboard-title">All Calendars</h2>
+            <p className="calendar-dashboard-subtitle">
+              Manage, filter, and view all calendars mapped to studios.
+            </p>
+          </div>
+        </div>
+      </div>
 
-      {/* ✅ Show Company Selector if Super Admin */}
+      {/* Company Selector (Super Admin) */}
       {isSuperAdmin && (
-        <div style={{ width: "40%", margin: "0 auto 20px auto" }}>
+        <div className="calendar-dashboard-company">
           <CompanySelector
             selectedCompanyId={selectedCompanyId}
             setSelectedCompanyId={setSelectedCompanyId}
@@ -79,37 +98,43 @@ const AllCalendar = () => {
         </div>
       )}
 
-      {/* ✅ Only show tabs and table after selecting a company (for Super Admin) */}
-      {(!isSuperAdmin || selectedCompanyId) && (
+      {/* Show content only after company selection */}
+      {(selectedCompanyId || !isSuperAdmin) && (
         <>
           {/* Tabs */}
-          <div className="calendar-tabs">
+          <div className="calendar-dashboard-tabs">
             <button
-              className={`tab-btn ${activeTab === "all" ? "active" : ""}`}
+              className={`calendar-dashboard-tab-btn ${
+                activeTab === "all" ? "active" : ""
+              }`}
               onClick={() => {
                 setActiveTab("all");
                 setCurrentPage(1);
               }}
             >
+              <CalendarCheck size={16} />
               All Calendars
             </button>
             <button
-              className={`tab-btn ${activeTab === "mapped" ? "active" : ""}`}
+              className={`calendar-dashboard-tab-btn ${
+                activeTab === "mapped" ? "active" : ""
+              }`}
               onClick={() => {
                 setActiveTab("mapped");
                 setCurrentPage(1);
               }}
             >
+              <Layers size={16} />
               Mapped Calendars
             </button>
           </div>
 
           {/* Table */}
-          <div className="calendar-table-wrapper">
+          <div className="calendar-dashboard-table-card">
             {currentData.length === 0 ? (
-              <p className="no-data">No calendars found.</p>
+              <p className="calendar-dashboard-no-data">No calendars found.</p>
             ) : (
-              <table className="calendar-table">
+              <table className="calendar-dashboard-table">
                 <thead>
                   <tr>
                     <th>Name</th>
@@ -121,15 +146,17 @@ const AllCalendar = () => {
                 <tbody>
                   {currentData.map((cal, index) => (
                     <tr key={index}>
-                      <td className="calendar-name" title={cal.name}>
+                      <td className="calendar-dashboard-name" title={cal.name}>
                         {cal.name}
                       </td>
                       <td>{cal.calendarType || "-"}</td>
                       <td>{cal.studioId || "-"}</td>
                       <td>
                         <span
-                          className={`mapped-status ${
-                            cal.isMapped ? "mapped" : "unmapped"
+                          className={`calendar-dashboard-status ${
+                            cal.isMapped
+                              ? "calendar-dashboard-status-mapped"
+                              : "calendar-dashboard-status-unmapped"
                           }`}
                         >
                           {cal.isMapped ? "Yes" : "No"}
@@ -144,32 +171,51 @@ const AllCalendar = () => {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="pagination">
-              <button
-                className="page-btn"
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage((p) => p - 1)}
-              >
-                ◀ Prev
-              </button>
-              <span>
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                className="page-btn"
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage((p) => p + 1)}
-              >
-                Next ▶
-              </button>
+            <div className="calendar-dashboard-pagination-wrapper">
+              <div className="calendar-dashboard-pagination">
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  ◀ Prev
+                </button>
+                <span>
+                  Page <strong>{currentPage}</strong> of {totalPages}
+                </span>
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  Next ▶
+                </button>
+              </div>
+
+              {/* Rows per page */}
+              <div className="calendar-dashboard-rows-selector">
+                <label>Rows per page:</label>
+                <select
+                  value={rowsPerPage}
+                  onChange={(e) => {
+                    setRowsPerPage(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
+                >
+                  <option value={5}>5</option>
+                  <option value={8}>8</option>
+                  <option value={15}>15</option>
+                  <option value={25}>25</option>
+                  <option value={filteredCalendars.length}>All</option>
+                </select>
+              </div>
             </div>
           )}
         </>
       )}
 
-      {/* Message for Super Admin before selection */}
       {isSuperAdmin && !selectedCompanyId && (
-        <p className="no-data">Please select a company to view calendars.</p>
+        <p className="calendar-dashboard-no-data">
+          Please select a company to view calendars.
+        </p>
       )}
     </div>
   );

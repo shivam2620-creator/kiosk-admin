@@ -1,59 +1,189 @@
-.company-list-container {
-  padding: 20px;
+/* === AllCompanyList Dashboard Styling === */
+
+.company-dashboard-section {
+  background: #1e1e1e;
+  color: #f1f1f1;
+  border-radius: 12px;
+  padding: 25px;
+ 
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
+  font-family: var(--second-font-family, "Inter"), sans-serif;
 }
 
-.table-title {
+/* Header */
+.company-dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #333;
+  padding-bottom: 15px;
+}
+
+.company-dashboard-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.company-dashboard-icon-circle {
+  background: var(--primary-color, #eab308);
+  color: #000;
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.company-dashboard-title {
   font-size: 22px;
-  margin-bottom: 15px;
   font-weight: 600;
-  color: white;
+  margin: 0;
 }
 
-.table-wrapper {
-  overflow-x: auto;
+.company-dashboard-subtitle {
+  font-size: 13px;
+  color: #aaa;
+  margin: 0;
 }
 
-.company-table {
+/* Table */
+.company-dashboard-table-card {
+  background: #2a2a2a;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.company-dashboard-table {
   width: 100%;
   border-collapse: collapse;
-  background: #333;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  border-radius: 8px;
 }
 
-.company-table th,
-.company-table td {
-  padding: 12px 15px;
-  border-bottom: 1px solid #424141;
-  text-align: left;
+.company-dashboard-table th,
+.company-dashboard-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.company-dashboard-table th {
+  background: #252525;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+.company-dashboard-table tr:hover {
+  background: #333;
+}
+
+/* Status Badge */
+.company-dashboard-status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+.company-dashboard-status-active {
+  background: #22c55e33;
+  color: #22c55e;
+}
+
+.company-dashboard-status-inactive {
+  background: #ef444433;
+  color: #ef4444;
+}
+
+/* Delete Button */
+.company-dashboard-delete-btn {
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.company-dashboard-delete-btn:hover {
+  opacity: 0.85;
+}
+
+.company-dashboard-delete-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Pagination */
+.company-dashboard-pagination-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 25px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.company-dashboard-pagination {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.company-dashboard-pagination button {
+  background: var(--primary-color, #eab308);
+  border: none;
+  color: #000;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.company-dashboard-pagination button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Rows Selector */
+.company-dashboard-rows-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ccc;
   font-size: 14px;
 }
 
-.company-table th {
-  background-color: #333;
-  font-weight: 600;
-}
-
-.company-table tr:hover {
-  background-color: #3333;
-}
-
-.status.active {
-  color: green;
-  font-weight: 600;
-}
-
-.status.inactive {
-  color: red;
-  font-weight: 600;
-}
-
-.delete-btn {
-  background: #ff4d4d;
-  border: none;
+.company-dashboard-rows-selector select {
+  background: #2b2b2b;
+  border: 1px solid #444;
   color: white;
-  padding: 6px 12px;
-  border-radius: 5px;
-  cursor: not-allowed;
-  font-size: 13px;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 14px;
+}
+
+/* Loader & Empty States */
+.company-dashboard-loading {
+  height: calc(100vh - 200px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #ccc;
+  gap: 12px;
+  text-align: center;
+}
+
+.company-dashboard-no-data {
+  text-align: center;
+  color: #aaa;
+  padding: 40px 0;
+  font-size: 15px;
 }

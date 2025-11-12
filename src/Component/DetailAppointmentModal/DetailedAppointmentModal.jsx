@@ -52,7 +52,7 @@ const DetailedAppointmentModal = ({ appointmentId, onClose }) => {
             <section className="info-section">
               <h3>Client Information</h3>
               <div className="info-grid">
-                <p><strong>Name:</strong> {appointment.fullName}</p>
+                <p><strong>Name:</strong> {appointment.fullName || appointment.name}</p>
                 <p><strong>Email:</strong> {appointment.email}</p>
                 <p><strong>Phone:</strong> {appointment.phone}</p>
                 <p><strong>Age Group:</strong> {appointment.ageGroup}</p>
