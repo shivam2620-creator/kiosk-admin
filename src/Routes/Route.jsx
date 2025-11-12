@@ -1,13 +1,12 @@
-// Router/route.jsx
 import React, { Suspense, lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import RequireRole from "./RequireRole";
+import ProtectedRoute from "./ProtectedRoute"; // ✅ Protect private routes
 import MainLayout from "../Layout/Dashboard/MainLayout";
 import AuthLayout from "../Layout/AuthLayout/AuthLayout";
 import MediumSpinner from "../Utils/MediumSpinner/MediumSpinner";
 
-// lazy pages / components
-const AdminOptions = lazy(() => import("../Component/AdminOptions/AdminOptions"));
+// ===== Lazy-loaded pages =====
 const CreateCompany = lazy(() => import("../Pages/CreateCompany/CreateCompany"));
 const UpdateBranding = lazy(() => import("../Pages/UpdateBranding/UpdateBranding"));
 const AllCompanyList = lazy(() => import("../Pages/AllCompanyLlist/AllCompanyList"));
@@ -25,141 +24,152 @@ const RegisterGhlUser = lazy(() => import("../Pages/RegisterGhlUser/RegisterGhlU
 
 const Loading = (
   <div style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-   <MediumSpinner />
+    <MediumSpinner />
   </div>
 );
 
+// ===== Router Configuration =====
 const Route = createBrowserRouter([
+  // 🔒 Protected dashboard routes
   {
     path: "/",
     element: (
       <Suspense fallback={Loading}>
-        <MainLayout />
+        <ProtectedRoute /> {/* ✅ Wraps all private routes */}
       </Suspense>
     ),
     children: [
       {
-        index: true,
         element: (
           <Suspense fallback={Loading}>
-            <AllAppointmentList />
+            <MainLayout />
           </Suspense>
         ),
-      },
+        children: [
+          {
+            index: true,
+            element: (
+              <Suspense fallback={Loading}>
+                <AllAppointmentList />
+              </Suspense>
+            ),
+          },
 
-      // Shared (superAdmin + companyAdmin)
-      {
-        path: "/all-appointment",
-        element: (
-          <Suspense fallback={Loading}>
-            <AllAppointmentList />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/all-studios",
-        element: (
-          <Suspense fallback={Loading}>
-            <AllStudios />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/all-calendars-list",
-        element: (
-          <Suspense fallback={Loading}>
-            <AllCalendar />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/settings/create-studio",
-        element: (
-          <Suspense fallback={Loading}>
-            <CreateStudio />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/settings/map-service-and-combo",
-        element: (
-          <Suspense fallback={Loading}>
-            <MapServiceAndCombo />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/settings/update-calendar",
-        element: (
-          <Suspense fallback={Loading}>
-            <UpdateCalendar />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/ghl-user-list",
-        element: (
-          <Suspense fallback={Loading}>
-            <GhlUsersList />
-          </Suspense>
-        ),
-      },
+          // ===== Shared (superAdmin + companyAdmin) =====
+          {
+            path: "/all-appointment",
+            element: (
+              <Suspense fallback={Loading}>
+                <AllAppointmentList />
+              </Suspense>
+            ),
+          },
+          {
+            path: "/all-studios",
+            element: (
+              <Suspense fallback={Loading}>
+                <AllStudios />
+              </Suspense>
+            ),
+          },
+          {
+            path: "/all-calendars-list",
+            element: (
+              <Suspense fallback={Loading}>
+                <AllCalendar />
+              </Suspense>
+            ),
+          },
+          {
+            path: "/settings/create-studio",
+            element: (
+              <Suspense fallback={Loading}>
+                <CreateStudio />
+              </Suspense>
+            ),
+          },
+          {
+            path: "/settings/map-service-and-combo",
+            element: (
+              <Suspense fallback={Loading}>
+                <MapServiceAndCombo />
+              </Suspense>
+            ),
+          },
+          {
+            path: "/settings/update-calendar",
+            element: (
+              <Suspense fallback={Loading}>
+                <UpdateCalendar />
+              </Suspense>
+            ),
+          },
+          {
+            path: "/ghl-user-list",
+            element: (
+              <Suspense fallback={Loading}>
+                <GhlUsersList />
+              </Suspense>
+            ),
+          },
 
-      // SuperAdmin only (guarded)
-      {
-        path: "/update-branding",
-        element: (
-          <RequireRole role="superAdmin">
-            <Suspense fallback={Loading}>
-              <UpdateBranding />
-            </Suspense>
-          </RequireRole>
-        ),
-      },
-      {
-        path: "/companies-list",
-        element: (
-          <RequireRole role="superAdmin">
-            <Suspense fallback={Loading}>
-              <AllCompanyList />
-            </Suspense>
-          </RequireRole>
-        ),
-      },
-      {
-        path: "/settings/create-company",
-        element: (
-          <RequireRole role="superAdmin">
-            <Suspense fallback={Loading}>
-              <CreateCompany />
-            </Suspense>
-          </RequireRole>
-        ),
-      },
-      {
-        path: "/settings/create-user",
-        element: (
-          <RequireRole role="superAdmin">
-            <Suspense fallback={Loading}>
-              <CreateUser />
-            </Suspense>
-          </RequireRole>
-        ),
-      },
-      {
-        path: "/settings/register-ghl-user",
-        element: (
-          <RequireRole role="superAdmin">
-            <Suspense fallback={Loading}>
-              <RegisterGhlUser />
-            </Suspense>
-          </RequireRole>
-        ),
+          // ===== SuperAdmin Only =====
+          {
+            path: "/update-branding",
+            element: (
+              <RequireRole role="superAdmin">
+                <Suspense fallback={Loading}>
+                  <UpdateBranding />
+                </Suspense>
+              </RequireRole>
+            ),
+          },
+          {
+            path: "/companies-list",
+            element: (
+              <RequireRole role="superAdmin">
+                <Suspense fallback={Loading}>
+                  <AllCompanyList />
+                </Suspense>
+              </RequireRole>
+            ),
+          },
+          {
+            path: "/settings/create-company",
+            element: (
+              <RequireRole role="superAdmin">
+                <Suspense fallback={Loading}>
+                  <CreateCompany />
+                </Suspense>
+              </RequireRole>
+            ),
+          },
+          {
+            path: "/settings/create-user",
+            element: (
+              <RequireRole role="superAdmin">
+                <Suspense fallback={Loading}>
+                  <CreateUser />
+                </Suspense>
+              </RequireRole>
+            ),
+          },
+          {
+            path: "/settings/register-ghl-user",
+            element: (
+              <RequireRole role="superAdmin">
+                <Suspense fallback={Loading}>
+                  <RegisterGhlUser />
+                </Suspense>
+              </RequireRole>
+            ),
+          },
+        ],
       },
     ],
   },
 
-  // Auth routes
+  // 🔓 Public auth routes
   {
     path: "/auth",
     element: (

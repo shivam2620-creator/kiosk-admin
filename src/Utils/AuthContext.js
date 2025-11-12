@@ -1,9 +1,7 @@
-// AuthContext.jsx
 import { createContext, useContext, useEffect, useState, useRef } from "react";
 import { getUserDetailsById } from "../Apis/AuthApi/AuthApi";
 import { getCompanyDetailApi } from "../Apis/CompanyAdminApis/CompanyApis";
 import toast from "react-hot-toast";
-
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
@@ -20,22 +18,22 @@ export const AuthProvider = ({ children }) => {
   const [userLoading, setUserLoading] = useState(true);
 
   const refreshIntervalRef = useRef(null);
-
   const FIREBASE_API_KEY = process.env.REACT_APP_FIREBASE_API_KEY;
 
   // ✅ Load user from localStorage on startup
-  useEffect(() => {
-    const idToken = localStorage.getItem("idToken");
-    const refreshToken = localStorage.getItem("refreshToken");
-    const expiry = localStorage.getItem("tokenExpiry");
-    const storedUser = localStorage.getItem("userData");
+ useEffect(() => {
+  const idToken = localStorage.getItem("idToken");
+  const refreshToken = localStorage.getItem("refreshToken");
+  const expiry = localStorage.getItem("tokenExpiry");
+  const storedUser = localStorage.getItem("userData");
 
-    if (idToken && refreshToken && expiry && storedUser) {
-      setUser(JSON.parse(storedUser));
-      startTokenRefreshScheduler(refreshToken);
-    }
-    setLoading(false);
-  }, []);
+  if (idToken && refreshToken && expiry && storedUser) {
+    setUser(JSON.parse(storedUser));
+    startTokenRefreshScheduler(refreshToken);
+  }
+
+  setLoading(false); // always finish loading, no redirect here
+}, []);
 
   // ✅ Fetch user details
   const fetchUserDetails = async () => {
@@ -54,6 +52,11 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (err) {
       console.error("Error fetching user details:", err);
+      // redirect if fetching fails (token invalid or user not found)
+      const currentPath = window.location.pathname;
+      if (!currentPath.startsWith("/auth")) {
+        window.location.href = "/auth/login";
+      }
     } finally {
       if (isMounted) setUserLoading(false);
     }
@@ -75,7 +78,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Effects
   useEffect(() => {
     if (userId) fetchUserDetails();
   }, [userId]);
@@ -145,13 +147,12 @@ export const AuthProvider = ({ children }) => {
     startTokenRefreshScheduler(tokens.refreshToken);
   };
 
-  // ✅ Logout — now fully safe
+  // ✅ Logout (window.location version)
   const handleLogout = (message = "You have been logged out.") => {
     try {
-      window.location.href = "/auth/login";
       clearInterval(refreshIntervalRef.current);
       localStorage.clear();
-       
+
       setUser(null);
       setUserId(null);
       setCompanyId(null);
@@ -160,7 +161,11 @@ export const AuthProvider = ({ children }) => {
       setIsCompanyAdmin(false);
 
       toast.error(message);
-      
+
+      // ✅ Full reload redirect for clean logout
+      setTimeout(() => {
+        window.location.href = "/auth/login";
+      }, 500);
     } catch (err) {
       console.error("Logout error:", err);
     }

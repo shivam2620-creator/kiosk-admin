@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { loginApi } from "../../Apis/AuthApi/AuthApi";
 import { useAuth } from "../../Utils/AuthContext";
 import "./style.css";
@@ -33,6 +33,12 @@ const LoginPage = () => {
     }
   };
 
+  useEffect(() => {
+  const token = localStorage.getItem("idToken");
+  if (token) {
+    window.location.href = "/";
+  }
+}, []);
   const isDisabled = !email || !password || loading;
 
   return (
