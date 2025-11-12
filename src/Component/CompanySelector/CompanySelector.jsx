@@ -19,7 +19,7 @@ const CompanySelector = ({ selectedCompanyId, setSelectedCompanyId }) => {
       }
     };
     fetchCompanies();
-  }, []);
+  }, [dropdownOpen,dropdownRef]);
 
   // ✅ Close dropdown when clicking outside
   useEffect(() => {

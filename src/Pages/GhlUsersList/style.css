@@ -200,6 +200,7 @@
   cursor: pointer;
   font-weight: 600;
   transition: 0.2s ease;
+  margin-top: 22px;
 }
 
 .reset-btn:hover {

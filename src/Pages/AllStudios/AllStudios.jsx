@@ -127,6 +127,7 @@ const AllStudios = () => {
         <EditStudioModal
           selectedStudioId={editingStudio.id}
           studioName={editingStudio.name}
+          company = {selectedCompanyId}
           onClose={() => setEditingStudio(null)}
         />
       )}

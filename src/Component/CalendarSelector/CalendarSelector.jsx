@@ -65,7 +65,7 @@ const CalendarSelector = ({
     if (validCompany) {
       fetchAllCalendars();
     }
-  }, [companyId, company, isSuperAdmin]);
+  }, [companyId, company, isSuperAdmin,dropdownOpen]);
 
   // ✅ Fetch studio data when studioId changes
   useEffect(() => {

@@ -155,7 +155,7 @@ const AllAppointmentList = () => {
             <tbody>
               {appointments.map((a, i) => (
                 <tr key={i}>
-                  <td>{a.fullName || "N/A"}</td>
+                  <td>{a.full_name || "N/A"}</td>
                   <td>₹{a.amount || "—"}</td>
                   <td>
                     <span

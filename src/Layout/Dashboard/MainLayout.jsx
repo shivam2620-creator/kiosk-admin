@@ -20,6 +20,7 @@ import "./style.css";
 import { DiOnedrive } from "react-icons/di";
 import ProfileModal from "../../Component/ProfileModal/ProfileModal";
 import { FaTable } from "react-icons/fa";
+import { GiArchiveRegister } from "react-icons/gi";
 
 
 // ===== Sidebar Options =====
@@ -75,7 +76,7 @@ const settingsOptions = [
     title: "Create Studio",
     path: "/settings/create-studio",
     icon: <IoIosCreate size={20} />,
-    roles: ["superAdmin", "companyAdmin"], // both
+    roles: ["companyAdmin","superAdmin"], // both
   },
   {
     title: "Create Company",
@@ -104,6 +105,7 @@ const settingsOptions = [
   {
     title : "Register Ghl User",
     path:"/settings/register-ghl-user",
+    icon : <GiArchiveRegister  size ={20} />,
     roles : ["superAdmin"]
   }
 ];
@@ -185,41 +187,39 @@ const MainLayout = () => {
 
           <div className="sidebar-divider" />
 
-          {/* Settings Dropdown */}
-          <div className="settings-section">
-            <button
-              className={`sidebar-option settings-btn ${
-                isSettingsOpen ? "open" : ""
-              }`}
-              onClick={() => setIsSettingsOpen((p) => !p)}
-            >
-              <FaCog size={22} />
-              {!isCollapsed && <span>Settings</span>}
-            </button>
+         {/* Settings Dropdown */}
+<div className="settings-section" style={{ position: "relative" }}>
+  <button
+    className={`sidebar-option settings-btn ${isSettingsOpen ? "open" : ""}`}
+    onClick={() => setIsSettingsOpen((p) => !p)}
+  >
+    <FaCog size={22} />
+    {!isCollapsed && <span>Settings</span>}
+  </button>
 
-            {!isCollapsed && isSettingsOpen && (
-              <div className="settings-dropdown">
-                {getVisibleOptions(settingsOptions).map((option, idx) => {
-                  const isActive = pathname === option.path;
-                  return (
-                    <button
-                      key={idx}
-                      className={`sidebar-option sub-option ${
-                        isActive ? "active" : ""
-                      }`}
-                      onClick={() => {
-                        navigate(option.path);
-                        setIsSidebarOpen(false);
-                      }}
-                    >
-                      {option.icon}
-                      <span>{option.title}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </div>
+  {isSettingsOpen && (
+    <div className={`settings-dropdown ${isCollapsed ? "collapsed-dropdown" : ""}`}>
+      {getVisibleOptions(settingsOptions).map((option, idx) => {
+        const isActive = pathname === option.path;
+        return (
+          <button
+            key={idx}
+            className={`sidebar-option sub-option ${isActive ? "active" : ""}`}
+            onClick={() => {
+              navigate(option.path);
+              setIsSidebarOpen(false);
+              setIsSettingsOpen(false); // close after navigation
+            }}
+          >
+            {option.icon}
+            <span>{option.title}</span>
+          </button>
+        );
+      })}
+    </div>
+  )}
+</div>
+
           
         </nav>
         <div className="profile-logout-section">

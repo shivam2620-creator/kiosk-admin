@@ -20,7 +20,6 @@ import RegisterGhlUser from "../Pages/RegisterGhlUser/RegisterGhlUser";
 import RequireRole from "./RequireRole";
 import MainLayout from "../Layout/Dashboard/MainLayout";
 
-
 const Route = createBrowserRouter([
   {
     path: "/",

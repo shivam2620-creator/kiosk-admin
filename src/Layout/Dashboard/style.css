@@ -253,6 +253,12 @@
 }
 
 
+
+.sidebar.collapsed span,
+.sidebar.collapsed .user-info-section {
+  display: none !important;
+}
+
 /* ====== Responsive (Mobile/Tablet) ====== */
 @media (max-width: 1024px) {
   .sidebar {

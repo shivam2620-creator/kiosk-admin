@@ -10,10 +10,11 @@ import {
 import { useAuth } from "../../Utils/AuthContext";
 import toast from "react-hot-toast";
 import MediumSpinner from "../../Utils/MediumSpinner/MediumSpinner";
+
 import "./style.css";
 
-const EditStudioModal = ({ selectedStudioId, studioName, onClose }) => {
-  const { companyId } = useAuth();
+const EditStudioModal = ({ selectedStudioId, studioName, onClose,company }) => {
+  const { companyId,isSuperAdmin } = useAuth();
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -25,12 +26,14 @@ const EditStudioModal = ({ selectedStudioId, studioName, onClose }) => {
   const [clientConsentForm, setClientConsentForm] = useState("");
   const [staffConsentForm, setStaffConsentForm] = useState("");
   const [formChanged, setFormChanged] = useState(false);
+ 
 
   // ✅ Fetch studio details on mount
   const fetchStudioDetails = async () => {
+    const actualCompanyId = isSuperAdmin ? company : companyId
     try {
       setLoading(true);
-      const res = await getStudioAyIdApi(selectedStudioId, companyId);
+      const res = await getStudioAyIdApi(selectedStudioId, actualCompanyId);
       if (res?.data?.studio) {
         setStudioDetails(res.data.studio);
         setClientConsentForm(res.data.studio.clientConsentForm || "");
@@ -216,6 +219,7 @@ const EditStudioModal = ({ selectedStudioId, studioName, onClose }) => {
             <CalendarSelector
               selectedCalendarId={selectedCalendarId}
               setSelectedCalendarId={setSelectedCalendarId}
+              company={company}
             />
             <button
               onClick={handleAddCalendar}
