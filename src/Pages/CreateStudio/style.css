@@ -65,13 +65,22 @@
 }
 
 /* react-phone-input-2 */
-.phone-input {
+.phone-input, .react-tel-input .form-control {
   width: 100% !important;
   background: #333 !important;
   color: white !important;
   border: 1px solid #555 !important;
   border-radius: 6px !important;
+  padding: 20px 48px;
 }
+.react-tel-input .selected-flag{
+  background: #333 !important;
+  border: 1px solid #555 !important;
+}
+.react-tel-input .flag-dropdown{
+  border: 1px solid #555 !important;
+}
+
 
 /* Button */
 .submit-btn {

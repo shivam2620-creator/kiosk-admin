@@ -8,7 +8,7 @@ const CompanySelector = ({ selectedCompanyId, setSelectedCompanyId }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // ✅ Fetch companies on mount
+  // ✅ Fetch companies on mount or dropdown open
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
@@ -19,7 +19,7 @@ const CompanySelector = ({ selectedCompanyId, setSelectedCompanyId }) => {
       }
     };
     fetchCompanies();
-  }, [dropdownOpen,dropdownRef]);
+  }, [dropdownOpen]);
 
   // ✅ Close dropdown when clicking outside
   useEffect(() => {
@@ -32,7 +32,7 @@ const CompanySelector = ({ selectedCompanyId, setSelectedCompanyId }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // ✅ Filter companies by search
+  // ✅ Filter companies by search term
   const filteredCompanies = companies.filter((c) =>
     c.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -45,44 +45,48 @@ const CompanySelector = ({ selectedCompanyId, setSelectedCompanyId }) => {
   const selectedCompany = companies.find((c) => c.id === selectedCompanyId);
 
   return (
-    <div className="company-selector" ref={dropdownRef}>
-      <label className="company-label">Select Company:</label>
+    <div className="company-selector-wrapper" ref={dropdownRef}>
+      <label className="company-selector-label">Select Company:</label>
 
       <div
-        className={`dropdown-input ${dropdownOpen ? "active" : ""}`}
+        className={`company-dropdown-input ${
+          dropdownOpen ? "active" : ""
+        }`}
         onClick={() => setDropdownOpen(!dropdownOpen)}
       >
         {selectedCompany ? selectedCompany.name : "Choose a company"}
-        <span className="arrow">{dropdownOpen ? "▲" : "▼"}</span>
+        <span className="company-dropdown-arrow">
+          {dropdownOpen ? "▲" : "▼"}
+        </span>
       </div>
 
       {dropdownOpen && (
-        <div className="dropdown-menu">
+        <div className="company-dropdown-menu">
           <input
             type="text"
-            className="dropdown-search"
+            className="company-dropdown-search"
             placeholder="Search company..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onClick={(e) => e.stopPropagation()}
           />
 
-          <div className="dropdown-list">
+          <div className="company-dropdown-list">
             {filteredCompanies.length > 0 ? (
               filteredCompanies.map((company) => (
                 <div
                   key={company.id}
-                  className={`dropdown-item ${
+                  className={`company-dropdown-item ${
                     selectedCompanyId === company.id ? "selected" : ""
                   }`}
                   onClick={() => handleSelect(company)}
                 >
-                  <div className="company-name">{company.name}</div>
-                  <div className="company-email">{company.email}</div>
+                  <div className="company-item-name">{company.name}</div>
+                  <div className="company-item-email">{company.email}</div>
                 </div>
               ))
             ) : (
-              <div className="no-results">No companies found</div>
+              <div className="company-no-results">No companies found</div>
             )}
           </div>
         </div>

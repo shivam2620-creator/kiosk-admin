@@ -1,98 +1,108 @@
-.company-selector {
+.company-selector-wrapper {
   position: relative;
   width: 100%;
-
-  margin: 0 auto;
-
+  margin-top: 10px;
 }
 
-.company-label {
+.company-selector-label {
   display: block;
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: white;
-}
-
-.dropdown-input {
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 10px 12px;
-  background-color: #fafafa;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: border-color 0.2s ease;
-}
-
-.dropdown-input.active {
-  border-color: #ecaa20;
-}
-
-.arrow {
-  font-size: 12px;
-  color: #666;
-}
-
-.dropdown-menu {
-  position: absolute;
-  top: 105%;
-  left: 0;
-  width: 100%;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  z-index: 50;
-}
-
-.dropdown-search {
-  width: calc(100% - 20px);
-  margin: 8px 10px;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
-
-.dropdown-list {
-  max-height: 220px;
-  overflow-y: auto;
-}
-
-.dropdown-item {
-  padding: 10px 12px;
-  cursor: pointer;
-  border-bottom: 1px solid #f3f3f3;
-  transition: background 0.2s;
-}
-
-.dropdown-item:hover {
-  background-color: #f8f8f8;
-}
-
-.dropdown-item.selected {
-  background-color: var(--button-color);
-  color: white;
-}
-
-.company-name {
-  font-weight: 600;
-}
-
-.company-email {
-  font-size: 13px;
-  color: #555;
-}
-.dropdown-item.selected .company-email{
-    color: #eceaea;
-}
-
-.no-results {
-  text-align: center;
-  padding: 12px;
-  color: #777;
+  margin-bottom: 8px;
+  color: #fff;
+  font-weight: 500;
   font-size: 14px;
 }
 
+.company-dropdown-input {
+  width: 100%;
+  padding: 10px 12px;
+  background: #2e2e2e;
+  color: #fff;
+  border: 1px solid #555;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.2s ease;
+}
 
+.company-dropdown-input.active {
+  border-color: var(--primary-color, #ecaa20);
+}
 
+.company-dropdown-arrow {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.company-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 5px);
+  width: 100%;
+  background: #2b2b2b;
+  border: 1px solid #444;
+  border-radius: 8px;
+  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.company-dropdown-search {
+  width: 100%;
+  padding: 10px;
+  background: #202020;
+  color: #fff;
+  border: none;
+  border-bottom: 1px solid #444;
+  border-radius: 8px 8px 0 0;
+  outline: none;
+}
+
+.company-dropdown-list {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.company-dropdown-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #3a3a3a;
+  transition: background 0.2s ease;
+}
+
+.company-dropdown-item:hover {
+  background: #383838;
+}
+
+.company-dropdown-item.selected {
+  background: var(--primary-color, #ecaa20);
+  color: #000;
+}
+
+.company-item-name {
+  font-weight: 600;
+}
+
+.company-item-email {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.company-no-results {
+  text-align: center;
+  padding: 12px;
+  color: #aaa;
+  font-size: 14px;
+}
+
+/* Scrollbar styling */
+.company-dropdown-list::-webkit-scrollbar {
+  width: 6px;
+}
+.company-dropdown-list::-webkit-scrollbar-thumb {
+  background: var(--primary-color, #ecaa20);
+  border-radius: 10px;
+}
+.company-dropdown-list::-webkit-scrollbar-track {
+  background: transparent;
+}

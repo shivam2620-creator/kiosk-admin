@@ -1,47 +1,118 @@
+// Router/route.jsx
+import React, { Suspense, lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
-import App from "../App";
-import RoleCheck from "./RoleCheck";
-import AdminOptions from "../Component/AdminOptions/AdminOptions";
-import CreateCompany from "../Pages/CreateCompany/CreateCompany";
-import UpdateBranding from "../Pages/UpdateBranding/UpdateBranding";
-import AuthLayout from "../Layout/AuthLayout/AuthLayout";
-import AllCompanyList from "../Pages/AllCompanyLlist/AllCompanyList";
-import CreateStudio from "../Pages/CreateStudio/CreateStudio";
-import LoginPage from "../Pages/Login/Login";
-import CreateUser from "../Pages/CreateUser/CreateUser";
-import AllStudios from "../Pages/AllStudios/AllStudios";
-import ForgotPassword from "../Pages/ForgotPassword/ForgotPassword";
-import MapServiceAndCombo from "../Pages/MapService&Combo/MapService&Combo";
-import GhlUsersList from "../Pages/GhlUsersList/GhlUsersList";
-import UpdateCalendar from "../Pages/UpdateCalendar/UpdateCalendar";
-import AllCalendar from "../Pages/AllCalendars/AllCalendar";
-import AllAppointmentList from "../Pages/AllAppointment/AllAppointmentList";
-import RegisterGhlUser from "../Pages/RegisterGhlUser/RegisterGhlUser";
 import RequireRole from "./RequireRole";
 import MainLayout from "../Layout/Dashboard/MainLayout";
+import AuthLayout from "../Layout/AuthLayout/AuthLayout";
+import MediumSpinner from "../Utils/MediumSpinner/MediumSpinner";
+
+// lazy pages / components
+const AdminOptions = lazy(() => import("../Component/AdminOptions/AdminOptions"));
+const CreateCompany = lazy(() => import("../Pages/CreateCompany/CreateCompany"));
+const UpdateBranding = lazy(() => import("../Pages/UpdateBranding/UpdateBranding"));
+const AllCompanyList = lazy(() => import("../Pages/AllCompanyLlist/AllCompanyList"));
+const CreateStudio = lazy(() => import("../Pages/CreateStudio/CreateStudio"));
+const LoginPage = lazy(() => import("../Pages/Login/Login"));
+const CreateUser = lazy(() => import("../Pages/CreateUser/CreateUser"));
+const AllStudios = lazy(() => import("../Pages/AllStudios/AllStudios"));
+const ForgotPassword = lazy(() => import("../Pages/ForgotPassword/ForgotPassword"));
+const MapServiceAndCombo = lazy(() => import("../Pages/MapService&Combo/MapService&Combo"));
+const GhlUsersList = lazy(() => import("../Pages/GhlUsersList/GhlUsersList"));
+const UpdateCalendar = lazy(() => import("../Pages/UpdateCalendar/UpdateCalendar"));
+const AllCalendar = lazy(() => import("../Pages/AllCalendars/AllCalendar"));
+const AllAppointmentList = lazy(() => import("../Pages/AllAppointment/AllAppointmentList"));
+const RegisterGhlUser = lazy(() => import("../Pages/RegisterGhlUser/RegisterGhlUser"));
+
+const Loading = (
+  <div style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+   <MediumSpinner />
+  </div>
+);
 
 const Route = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />,
+    element: (
+      <Suspense fallback={Loading}>
+        <MainLayout />
+      </Suspense>
+    ),
     children: [
-      { index: true, element: <AdminOptions /> },
+      {
+        index: true,
+        element: (
+          <Suspense fallback={Loading}>
+            <AdminOptions />
+          </Suspense>
+        ),
+      },
 
       // Shared (superAdmin + companyAdmin)
-      { path: "/all-appointment", element: <AllAppointmentList /> },
-      { path: "/all-studios", element: <AllStudios /> },
-      { path: "/all-calendars-list", element: <AllCalendar /> },
-      { path: "/settings/create-studio", element: <CreateStudio /> },
-      { path: "/settings/map-service-and-combo", element: <MapServiceAndCombo /> },
-      { path: "/settings/update-calendar", element: <UpdateCalendar /> },
-      { path: "/ghl-user-list", element:  <GhlUsersList />},
+      {
+        path: "/all-appointment",
+        element: (
+          <Suspense fallback={Loading}>
+            <AllAppointmentList />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/all-studios",
+        element: (
+          <Suspense fallback={Loading}>
+            <AllStudios />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/all-calendars-list",
+        element: (
+          <Suspense fallback={Loading}>
+            <AllCalendar />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/settings/create-studio",
+        element: (
+          <Suspense fallback={Loading}>
+            <CreateStudio />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/settings/map-service-and-combo",
+        element: (
+          <Suspense fallback={Loading}>
+            <MapServiceAndCombo />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/settings/update-calendar",
+        element: (
+          <Suspense fallback={Loading}>
+            <UpdateCalendar />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/ghl-user-list",
+        element: (
+          <Suspense fallback={Loading}>
+            <GhlUsersList />
+          </Suspense>
+        ),
+      },
 
       // SuperAdmin only (guarded)
       {
         path: "/update-branding",
         element: (
           <RequireRole role="superAdmin">
-            <UpdateBranding />
+            <Suspense fallback={Loading}>
+              <UpdateBranding />
+            </Suspense>
           </RequireRole>
         ),
       },
@@ -49,7 +120,9 @@ const Route = createBrowserRouter([
         path: "/companies-list",
         element: (
           <RequireRole role="superAdmin">
-            <AllCompanyList />
+            <Suspense fallback={Loading}>
+              <AllCompanyList />
+            </Suspense>
           </RequireRole>
         ),
       },
@@ -57,7 +130,9 @@ const Route = createBrowserRouter([
         path: "/settings/create-company",
         element: (
           <RequireRole role="superAdmin">
-            <CreateCompany />
+            <Suspense fallback={Loading}>
+              <CreateCompany />
+            </Suspense>
           </RequireRole>
         ),
       },
@@ -65,7 +140,9 @@ const Route = createBrowserRouter([
         path: "/settings/create-user",
         element: (
           <RequireRole role="superAdmin">
-            <CreateUser />
+            <Suspense fallback={Loading}>
+              <CreateUser />
+            </Suspense>
           </RequireRole>
         ),
       },
@@ -73,7 +150,9 @@ const Route = createBrowserRouter([
         path: "/settings/register-ghl-user",
         element: (
           <RequireRole role="superAdmin">
-            <RegisterGhlUser />
+            <Suspense fallback={Loading}>
+              <RegisterGhlUser />
+            </Suspense>
           </RequireRole>
         ),
       },
@@ -83,15 +162,38 @@ const Route = createBrowserRouter([
   // Auth routes
   {
     path: "/auth",
-    element: <AuthLayout />,
+    element: (
+      <Suspense fallback={Loading}>
+        <AuthLayout />
+      </Suspense>
+    ),
     children: [
-      { index: true, element: <LoginPage /> },
-      { path: "login", element: <LoginPage /> },
-      { path: "forgot-password", element: <ForgotPassword /> },
+      {
+        index: true,
+        element: (
+          <Suspense fallback={Loading}>
+            <LoginPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "login",
+        element: (
+          <Suspense fallback={Loading}>
+            <LoginPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "forgot-password",
+        element: (
+          <Suspense fallback={Loading}>
+            <ForgotPassword />
+          </Suspense>
+        ),
+      },
     ],
   },
 ]);
 
 export default Route;
-
-
