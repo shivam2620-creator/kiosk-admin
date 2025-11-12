@@ -33,12 +33,7 @@ const LoginPage = () => {
     }
   };
 
-  useEffect(() => {
-  const token = localStorage.getItem("idToken");
-  if (token) {
-    window.location.href = "/";
-  }
-}, []);
+
   const isDisabled = !email || !password || loading;
 
   return (

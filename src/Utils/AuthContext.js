@@ -51,14 +51,12 @@ export const AuthProvider = ({ children }) => {
         setIsCompanyAdmin(fetchedUser.role === "company_admin");
       }
     } catch (err) {
-      console.error("Error fetching user details:", err);
-      // redirect if fetching fails (token invalid or user not found)
-      const currentPath = window.location.pathname;
-      if (!currentPath.startsWith("/auth")) {
-        window.location.href = "/auth/login";
-      }
+      console.log(err);
+      toast.error(err.response.data.error)
+
     } finally {
       if (isMounted) setUserLoading(false);
+   
     }
     return () => {
       isMounted = false;
