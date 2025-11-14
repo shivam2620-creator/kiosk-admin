@@ -158,7 +158,7 @@ export const AuthProvider = ({ children }) => {
       setIsSuperAdmin(false);
       setIsCompanyAdmin(false);
 
-      toast.error(message);
+
 
       // ✅ Full reload redirect for clean logout
       setTimeout(() => {

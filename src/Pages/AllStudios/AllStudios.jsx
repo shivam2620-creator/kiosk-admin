@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./style.css";
-import { useSelector, useDispatch } from "react-redux";
+import axiosInstance from "../../Apis/axiosInstance"; // adjust endpoint if needed
 import SmallSpinner from "../../Utils/SmallSpinner/SmallSpinner";
 import MediumSpinner from "../../Utils/MediumSpinner/MediumSpinner";
-import { fetchAllStudios } from "../../Utils/fetchAllStudios";
 import { useAuth } from "../../Utils/AuthContext";
 import CompanySelector from "../../Component/CompanySelector/CompanySelector";
 import { deleteStudioApi } from "../../Apis/CompanyAdminApis/StudiosApis";
@@ -12,13 +11,16 @@ import toast from "react-hot-toast";
 import { MapPin, Edit3, Trash2 } from "lucide-react";
 
 const AllStudios = () => {
-  const studios = useSelector((state) => state.studio.studioData || []);
-  const loading = useSelector((state) => state.studio.loading);
+  // local state (replaces Redux)
+  const [studios, setStudios] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // NO localStorage persistence — start empty
   const [selectedCompanyId, setSelectedCompanyId] = useState("");
+
   const { companyId, isCompanyAdmin, user, isSuperAdmin } = useAuth();
   const [deletingId, setDeletingId] = useState(null);
   const [editingStudio, setEditingStudio] = useState(null);
-  const dispatch = useDispatch();
 
   // Pagination (client-side)
   const [page, setPage] = useState(1);
@@ -28,27 +30,72 @@ const AllStudios = () => {
   const currentStudios = studios.slice(startIndex, startIndex + rowsPerPage);
   const totalPages = Math.max(1, Math.ceil(studios.length / rowsPerPage));
 
-  // Fetch studios: company admin auto, super admin after company selection
+  // helper: fetch studios for a given company
+  const fetchStudiosForCompany = async (companyIdToFetch) => {
+    if (!companyIdToFetch) {
+      setStudios([]);
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      // === ADJUST THIS ENDPOINT if your backend route differs ===
+      // Example endpoints you might have:
+      // axiosInstance.get(`/studios/company/${companyIdToFetch}`)
+      // axiosInstance.get(`/company/${companyIdToFetch}/studios`)
+      const res = await axiosInstance.get(`/studios?companyId=${companyIdToFetch}`);
+
+      // Expectation: res.data.studios OR res.data.data OR res.data
+      const data =
+        res?.data?.studios ?? res?.data?.data ?? res?.data ?? [];
+
+      const studiosArray = Array.isArray(data) ? data : [];
+
+      setStudios(studiosArray);
+    } catch (err) {
+      console.error("Failed to fetch studios:", err);
+      toast.error("Failed to load studios");
+      setStudios([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch studios when component mounts or selection changes
   useEffect(() => {
-    if (isCompanyAdmin && user?.companyId) {
-      fetchAllStudios(user.companyId, dispatch);
-    }
-    if (isSuperAdmin && selectedCompanyId) {
-      fetchAllStudios(selectedCompanyId, dispatch);
-    }
-    // reset page when studios change
     setPage(1);
-  }, [isCompanyAdmin, isSuperAdmin, selectedCompanyId, user?.companyId, dispatch]);
+
+    if (isCompanyAdmin && user?.companyId) {
+      // company admin always sees their company studios
+      fetchStudiosForCompany(user.companyId);
+      return;
+    }
+
+    if (isSuperAdmin) {
+      if (selectedCompanyId) {
+        // only fetch when superadmin actively selected a company
+        fetchStudiosForCompany(selectedCompanyId);
+      } else {
+        // no selection => make sure list is empty (prevent stale display)
+        setStudios([]);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCompanyAdmin, isSuperAdmin, selectedCompanyId, user?.companyId]);
 
   const handleDelete = async (studioId) => {
+    if (!window.confirm("Are you sure you want to delete this studio?")) return;
+
     setDeletingId(studioId);
     try {
-      const res = await deleteStudioApi(isSuperAdmin ? selectedCompanyId : companyId, studioId);
+      const targetCompany = isSuperAdmin ? selectedCompanyId : companyId;
+      const res = await deleteStudioApi(targetCompany, studioId);
       if (res?.data?.success) {
         toast.success(res.data.message || "Studio deleted");
-        // refresh list
-        if (isCompanyAdmin) fetchAllStudios(user.companyId, dispatch);
-        if (isSuperAdmin && selectedCompanyId) fetchAllStudios(selectedCompanyId, dispatch);
+        // refetch after delete
+        const refetchCompany = isSuperAdmin ? selectedCompanyId : user?.companyId || companyId;
+        await fetchStudiosForCompany(refetchCompany);
       } else {
         toast.error(res?.data?.message || "Failed to delete studio");
       }
@@ -84,11 +131,32 @@ const AllStudios = () => {
 
       {/* Company selector for super admin */}
       {isSuperAdmin && (
-        <div className="studio-dashboard-company-select">
+        <div className="studio-dashboard-company-select" style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <CompanySelector
             selectedCompanyId={selectedCompanyId}
             setSelectedCompanyId={setSelectedCompanyId}
           />
+          {/* optional clear button so superadmin can clear selection quickly */}
+          {selectedCompanyId && (
+            <button
+              onClick={() => {
+                setSelectedCompanyId("");
+                setStudios([]); // ensure UI clears immediately
+              }}
+              className="clear-company-btn"
+              title="Clear selection"
+              style={{
+                background: "transparent",
+                color: "#fff",
+                border: "1px solid rgba(255,255,255,0.08)",
+                padding: "6px 10px",
+                borderRadius: 6,
+                cursor: "pointer",
+              }}
+            >
+              Clear
+            </button>
+          )}
         </div>
       )}
 
@@ -201,7 +269,12 @@ const AllStudios = () => {
           selectedStudioId={editingStudio.id}
           studioName={editingStudio.name}
           company={isSuperAdmin ? selectedCompanyId : companyId}
-          onClose={() => setEditingStudio(null)}
+          onClose={() => {
+            setEditingStudio(null);
+            // refetch after edit
+            const refetchCompany = isSuperAdmin ? selectedCompanyId : user?.companyId || companyId;
+            fetchStudiosForCompany(refetchCompany);
+          }}
         />
       )}
     </div>

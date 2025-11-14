@@ -5,6 +5,7 @@ import ProtectedRoute from "./ProtectedRoute"; // ✅ Protect private routes
 import MainLayout from "../Layout/Dashboard/MainLayout";
 import AuthLayout from "../Layout/AuthLayout/AuthLayout";
 import MediumSpinner from "../Utils/MediumSpinner/MediumSpinner";
+import ServiceAndCombination from "../Pages/ServiceAndCombinations/ServiceAndCombination";
 
 // ===== Lazy-loaded pages =====
 const CreateCompany = lazy(() => import("../Pages/CreateCompany/CreateCompany"));
@@ -111,6 +112,10 @@ const Route = createBrowserRouter([
                 <GhlUsersList />
               </Suspense>
             ),
+          },
+          {
+            path: "/service-and-combination",
+            element: <ServiceAndCombination />
           },
 
           // ===== SuperAdmin Only =====

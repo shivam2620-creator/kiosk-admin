@@ -175,12 +175,12 @@ const MapServiceAndCombo = () => {
         setMappings([]);
         setCalendarId("");
         await checkMappingStatus(selectedStudioId);
-      } else {
-        toast.error(res?.data?.error || "Failed to save mappings.");
-      }
+      } 
     } catch (err) {
-      console.error("createMapping:", err);
-      toast.error("Error while saving mappings.");
+      console.log(err)
+   
+      toast.error(err.response?.data?.error || "Failed to save mappings.");
+
     } finally {
       setSaving(false);
     }

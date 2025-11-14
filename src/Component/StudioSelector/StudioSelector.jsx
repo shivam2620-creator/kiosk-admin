@@ -61,8 +61,7 @@ const StudioSelector = ({ selectedStudioId, setSelectedStudioId,company}) => {
   };
 
   const selectedStudio = studios.find((s) => s.id === selectedStudioId);
-  console.log("selected studio", selectedStudio)
-  
+
 
   return (
     <div className="studio-selector" ref={dropdownRef}>

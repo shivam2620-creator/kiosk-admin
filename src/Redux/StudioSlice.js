@@ -15,12 +15,15 @@ const studioSlice = createSlice({
         },
         setLoading: (state, action) => {
             state.loading = action.payload;
-        }
+        },
+         clearStudios(state) {
+      state.studioData = [];
+    }
         
 
     },
 });
 
-export const { setStudioData,setLoading } = studioSlice.actions;
+export const { clearStudios,setStudioData,setLoading } = studioSlice.actions;
 
 export default studioSlice.reducer;

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import toast from "react-hot-toast";
 import { useAuth } from "../../Utils/AuthContext";
 import { getAllCalenderApi } from "../../Apis/CompanyAdminApis/CompanyApis";
@@ -8,7 +8,7 @@ import "./style.css";
 
 const CalendarSelector = ({
   selectedCalendarId,
-  setSelectedCalendarId, // ✅ required
+  setSelectedCalendarId,
   mappingFunctionality = true,
   studioId = null,
   company = null,
@@ -20,10 +20,11 @@ const CalendarSelector = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const dropdownRef = useRef(null);
   const { companyId, isSuperAdmin } = useAuth();
 
-  // ✅ Fetch calendars from API
+  // FETCH ALL CALENDARS
   const fetchAllCalendars = async () => {
     try {
       setLoading(true);
@@ -32,77 +33,73 @@ const CalendarSelector = ({
 
       const res = await getAllCalenderApi(targetCompanyId);
       if (res?.data?.success) {
-        setAllCalendar(res.data.calendars || []);
+        const list = res.data.calendars || [];
+        setAllCalendar(list);
       } else {
         toast.error("Failed to fetch calendars");
       }
     } catch (err) {
-      console.error(err);
       toast.error("Error fetching calendars");
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Fetch studio details to know which calendars it already has
+  // FETCH STUDIO CALENDARS
   const fetchStudioById = async () => {
-    if (!studioId) return; // only fetch when needed
+    if (!studioId) return;
+
     try {
       const targetCompanyId = isSuperAdmin ? company : companyId;
       const res = await getStudioAyIdApi(studioId, targetCompanyId);
+
       if (res?.data?.studio) {
         const { calendars = [] } = res.data.studio;
         setCalendarPresentInStudio(calendars);
       }
     } catch (err) {
-      console.error("Error fetching studio details:", err);
+      toast.error("Error fetching studio details");
     }
   };
 
-  // ✅ Fetch calendars when company changes
+  // EFFECTS
   useEffect(() => {
     const validCompany = isSuperAdmin ? company : companyId;
-    if (validCompany) {
-      fetchAllCalendars();
-    }
-  }, [companyId, company, isSuperAdmin,dropdownOpen]);
+    if (validCompany) fetchAllCalendars();
+  }, [company, companyId]);
 
-  // ✅ Fetch studio data when studioId changes
   useEffect(() => {
-    if (studioId) {
-      fetchStudioById();
-    }
+    if (studioId) fetchStudioById();
   }, [studioId]);
 
-  // ✅ Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setDropdownOpen(false);
-      }
+    const handler = (e) => {
+      if (!dropdownRef.current?.contains(e.target)) setDropdownOpen(false);
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // ✅ Filter calendars
+  // FILTER CALENDARS
   const filteredCalendars = useMemo(() => {
     return (
       allCalendar?.filter(
         (cal) =>
-          cal.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          cal.calendarType?.toLowerCase().includes(searchTerm.toLowerCase())
+          (cal.name || "")
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          (cal.calendarType || "")
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
       ) || []
     );
   }, [allCalendar, searchTerm]);
 
-  // ✅ Handle select
+  // SELECT CALENDAR
   const handleSelect = (calendar) => {
-    const isCalendarMappedToThisStudio = presentCalendarInStudio.includes(
-      calendar.id
-    );
+    const isCalendarMappedToThisStudio =
+      presentCalendarInStudio.includes(calendar.id);
 
-    // If mapping is enabled and it's mapped elsewhere
     const isMappedToAnotherStudio =
       mappingFunctionality &&
       calendar.isMapped &&
@@ -112,7 +109,9 @@ const CalendarSelector = ({
       toast.error("This calendar is already mapped to another studio.");
       return;
     }
-    console.log("selected calendar", selectedCalendar)
+
+    // 🔥 ONLY LOG LEFT
+    console.log("Selected Calendar:", calendar);
 
     setSelectedCalendarId(calendar.id);
     setCalendarEmbeddedCode(calendar.calendarEmbeddedCode || "");
@@ -120,8 +119,8 @@ const CalendarSelector = ({
     setDropdownOpen(false);
   };
 
-  const selectedCalendar = allCalendar?.find(
-    (cal) => cal.id === selectedCalendarId
+  const selectedCalendar = allCalendar.find(
+    (c) => c.id === selectedCalendarId
   );
 
   return (
@@ -130,39 +129,28 @@ const CalendarSelector = ({
         <span className="required">*</span>Select Calendar:
       </label>
 
-      {/* Dropdown input */}
+      {/* Dropdown trigger */}
       <div
         className={`calendar-dropdown-input ${dropdownOpen ? "active" : ""}`}
-        onClick={() => !loading && setDropdownOpen(!dropdownOpen)}
-        style={{ position: "relative" }}
+        onClick={() => setDropdownOpen(!dropdownOpen)}
       >
         {loading ? (
           <div className="inline-loader">
-            <SmallSpinner />
-            <span
-              style={{
-                marginLeft: "8px",
-                fontSize: "13px",
-                opacity: 0.8,
-              }}
-            >
-              Loading calendars...
-            </span>
+            <SmallSpinner /> <span>Loading calendars...</span>
           </div>
         ) : selectedCalendar ? (
-          <span className={`${selectedCalendarId && "selected-cal"}`}>
-            <strong>{selectedCalendar.name}</strong> <br />
+          <span className="selected-cal">
+            <strong>{selectedCalendar.name}</strong>
+            <br />
             <small>{selectedCalendar.calendarType}</small>
           </span>
         ) : (
           "Choose a calendar"
         )}
-        {!loading && (
-          <span className="calendar-arrow">{dropdownOpen ? "▲" : "▼"}</span>
-        )}
+        <span className="calendar-arrow">{dropdownOpen ? "▲" : "▼"}</span>
       </div>
 
-      {/* Dropdown list */}
+      {/* Dropdown */}
       {dropdownOpen && !loading && (
         <div className="calendar-dropdown-menu">
           <input
@@ -175,42 +163,35 @@ const CalendarSelector = ({
           />
 
           <div className="calendar-dropdown-list">
-           {filteredCalendars.length > 0 ? (
-  filteredCalendars.map((calendar) => {
-    const isCalendarMappedToThisStudio =
-      presentCalendarInStudio.includes(calendar.id);
+            {filteredCalendars.map((calendar) => {
+              const isCalendarMappedToThisStudio =
+                presentCalendarInStudio.includes(calendar.id);
 
-    // ✅ Only mark as mapped if it's mapped but NOT in current studio
-    const isMappedButNotInThisStudio =
-      mappingFunctionality && calendar.isMapped && !isCalendarMappedToThisStudio;
+              const isMappedButNotInThisStudio =
+                calendar.isMapped && !isCalendarMappedToThisStudio;
 
-    return (
-      <div
-        key={calendar.id}
-        className={`calendar-dropdown-item ${
-          selectedCalendarId === calendar.id ? "selected" : ""
-        } ${isMappedButNotInThisStudio ? "mapped" : ""}`}
-        onClick={() => handleSelect(calendar)}
-      >
-        <div className="calendar-info">
-          <div className="calendar-name">
-            {calendar.name}
-            {/* 🚫 Show badge only if mapped but not in current studio */}
-            {isMappedButNotInThisStudio && (
-              <span className="mapped-badge">Mapped</span>
-            )}
-          </div>
-          <div className="calendar-type">
-            {calendar.calendarType || "N/A"}
-          </div>
-        </div>
-      </div>
-    );
-  })
-) : (
-  <div className="calendar-no-results">No calendars found</div>
-)}
-
+              return (
+                <div
+                  key={calendar.id}
+                  className={`calendar-dropdown-item ${
+                    selectedCalendarId === calendar.id ? "selected" : ""
+                  } ${isMappedButNotInThisStudio ? "mapped" : ""}`}
+                  onClick={() => handleSelect(calendar)}
+                >
+                  <div className="calendar-info">
+                    <div className="calendar-name">
+                      {calendar.name}
+                      {isMappedButNotInThisStudio && (
+                        <span className="mapped-badge">Mapped</span>
+                      )}
+                    </div>
+                    <div className="calendar-type">
+                      {calendar.calendarType || "N/A"}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

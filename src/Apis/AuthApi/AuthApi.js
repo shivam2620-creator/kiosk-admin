@@ -20,8 +20,8 @@ const resetPasswordUsingOtpApi = (data) => {
     return axios.post("https://us-central1-tattoo-shop-printing-dev.cloudfunctions.net/auth/reset-password-otp",data);
 }
 
-const resetPassword = () => {
-    return axiosInstance.post("/auth/reset-password");
+const resetPasswordApi = (data) => {
+    return axiosInstance.post("/auth/reset-password",data);
 }
 
 const getUserDetailsById = (userId) => {
@@ -29,4 +29,6 @@ const getUserDetailsById = (userId) => {
 
 }
 
-export { loginApi, createUserApi, sendOtpApi, resetPasswordUsingOtpApi, resetPassword,getUserDetailsById }
+
+
+export { loginApi, createUserApi, sendOtpApi, resetPasswordUsingOtpApi, resetPasswordApi,getUserDetailsById }

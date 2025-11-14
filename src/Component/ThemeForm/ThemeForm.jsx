@@ -28,8 +28,8 @@ const ThemeForm = ({ companyId }) => {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    // if you'd fetch existing branding, do it here when companyId changes
-    // e.g. fetch current branding and setForm(...)
+    // fetch existing branding here if needed and merge into `form`
+    // (not changed for this task)
   }, [companyId]);
 
   const handleChange = (key, value) => {
@@ -46,28 +46,29 @@ const ThemeForm = ({ companyId }) => {
     else handleChange(key, v);
   };
 
-  const canSave = () =>
-    companyId &&
-    (form.fontFamily || form.logoUrl) &&
-    form.primaryColor &&
-    form.background &&
-    form.textColor;
+  // canSave returns true if ANY field in the form contains a non-empty value
+  const canSave = () => {
+    return Object.values(form).some((v) => v !== null && v !== undefined && v !== "");
+  };
+
+  // build payload using only filled fields (non-empty)
+  const buildPayload = () => {
+    const payload = {};
+    Object.entries(form).forEach(([k, v]) => {
+      if (v !== null && v !== undefined && v !== "") {
+        payload[k] = v;
+      }
+    });
+    return payload;
+  };
 
   const handleSubmit = async () => {
     if (!companyId) return toast.error("No company selected.");
-    if (!canSave())
-      return toast.error("Please provide a font or logo and the main colors.");
+    if (!canSave()) return toast.error("Please fill at least one field before saving.");
 
     try {
       setSaving(true);
-      const payload = {
-        fontFamily: form.fontFamily,
-        logoUrl: form.logoUrl,
-        primaryColor: form.primaryColor,
-        secondaryColor: form.secondaryColor,
-        background: form.background,
-        textColor: form.textColor,
-      };
+      const payload = buildPayload();
 
       const res = await updateBrandingApi(companyId, payload);
 
@@ -96,7 +97,6 @@ const ThemeForm = ({ companyId }) => {
           <div className="tf-col tf-col--form">
             {/* Font selector (lazy) */}
             <div className="tf-field">
-              
               <Suspense fallback={<div style={{ color: "#ccc" }}>Loading font selector…</div>}>
                 <FontSelector
                   onSelect={(fonts) =>
@@ -109,7 +109,6 @@ const ThemeForm = ({ companyId }) => {
 
             {/* Logo uploader (lazy) */}
             <div className="tf-field">
-             
               <Suspense fallback={<div style={{ color: "#ccc" }}>Loading logo uploader…</div>}>
                 <LogoUploader
                   onUpload={(url) => setForm((prev) => ({ ...prev, logoUrl: url }))}
@@ -140,7 +139,6 @@ const ThemeForm = ({ companyId }) => {
                         onChange={(e) => handleHexInput(c.key, e.target.value)}
                       />
                     </div>
-                    
                   </div>
                 ))}
               </div>
@@ -177,11 +175,6 @@ const ThemeForm = ({ companyId }) => {
                   This is a live preview. Primary:{" "}
                   <strong style={{ color: form.primaryColor }}>{form.primaryColor}</strong>
                 </p>
-
-                {/* <div className="tf-button-sample">
-                  <button style={{ background: form.primaryColor }}>Primary</button>
-                  <button style={{ background: form.secondaryColor }}>Secondary</button>
-                </div> */}
               </div>
             </div>
 
@@ -199,6 +192,7 @@ const ThemeForm = ({ companyId }) => {
             className="tf-save-btn"
             onClick={handleSubmit}
             disabled={!canSave() || saving}
+            aria-disabled={!canSave() || saving}
           >
             {saving ? "Saving…" : "Save Theme"}
           </button>
