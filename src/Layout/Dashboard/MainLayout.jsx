@@ -44,6 +44,14 @@ const sidebarOptions = [
     icon: <MdOutlineTipsAndUpdates size={22} />,
     roles: ["superAdmin"], // only for super admin
   },
+
+  {
+    title: "Service Combination",
+    path: "/service-and-combination",
+    icon : <MdMiscellaneousServices size={20}/>,
+    roles : ["superAdmin",'companyAdmin']
+
+  },
   {
     title: "Companies List",
     path: "/companies-list",
