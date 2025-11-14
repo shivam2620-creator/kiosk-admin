@@ -6,7 +6,7 @@ import MainLayout from "../Layout/Dashboard/MainLayout";
 import AuthLayout from "../Layout/AuthLayout/AuthLayout";
 import MediumSpinner from "../Utils/MediumSpinner/MediumSpinner";
 import ServiceAndCombination from "../Pages/ServiceAndCombinations/ServiceAndCombination";
-
+import NotFound from "../Pages/PageNotFound/NotFound";
 // ===== Lazy-loaded pages =====
 const CreateCompany = lazy(() => import("../Pages/CreateCompany/CreateCompany"));
 const UpdateBranding = lazy(() => import("../Pages/UpdateBranding/UpdateBranding"));
@@ -209,6 +209,14 @@ const Route = createBrowserRouter([
       },
     ],
   },
+  {
+  path: "*",
+  element: (
+    <Suspense fallback={Loading}>
+      <NotFound />
+    </Suspense>
+  ),
+}
 ]);
 
 export default Route;
