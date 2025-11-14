@@ -6,7 +6,7 @@ import CreateCompanyForm from "../../Component/CreateCompanyForm/CreateCompanyFo
 const CreateCompany = () => {
   const [searchParams] = useSearchParams();
   const code = searchParams.get("code");
-  console.log("code", code);
+ 
 
   return (
     <div>

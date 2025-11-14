@@ -12,7 +12,7 @@ export const fetchAllCalendar = async (companyId,dispatch) => {
          }
 
     }catch(err){
-        console.log(err);
+       
     }finally{
         dispatch(setLoading(false));
     }

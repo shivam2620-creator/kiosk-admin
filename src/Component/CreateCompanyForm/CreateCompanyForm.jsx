@@ -82,7 +82,7 @@ const CreateCompanyForm = ({ code }) => {
       }
       await syncGhlUserAndCalender(response?.data?.company?.id);
     } catch (error) {
-      console.log(error);
+      
       toast.error("Failed to create company!");
     } finally {
       setCreateUserLoading(false);

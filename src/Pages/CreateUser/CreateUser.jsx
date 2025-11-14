@@ -54,7 +54,7 @@ const CreateUser = () => {
       // reset
       setUserData({ name: "", email: "", password: "", role: "", phone: "" });
       setSelectedCompanyId("");
-      console.log("User created:", response);
+    
     } catch (error) {
       console.error("Error creating user:", error);
       toast.error(error.response?.data?.error || "Failed to create user. Please try again.");

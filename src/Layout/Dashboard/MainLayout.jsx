@@ -124,7 +124,7 @@ const MainLayout = () => {
   const { pathname } = useLocation();
   const { isSuperAdmin, isCompanyAdmin, user,userLoading, handleLogout} = useAuth();
   const [showProfile,setShowProfile] = useState(false);
-  console.log(user)
+  
   
 
   // UI States

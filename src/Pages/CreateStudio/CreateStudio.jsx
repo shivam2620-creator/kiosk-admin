@@ -110,7 +110,7 @@ const CreateStudio = () => {
         if (isSuperAdmin) setSelectedCompanyId("");
       }
     } catch (err) {
-      console.log(err);
+     
       if (err?.response?.data?.error) toast.error(err.response.data.error);
       else toast.error("Something went wrong. Please try again.");
     } finally {

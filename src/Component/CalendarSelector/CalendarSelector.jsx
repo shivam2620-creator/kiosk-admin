@@ -127,8 +127,7 @@ const CalendarSelector = ({
       return;
     }
 
-    // ONLY LOG SELECTED CALENDAR
-    console.log("Selected Calendar:", calendar);
+   
 
     setSelectedCalendarId(calendar.id);
     setCalendarEmbeddedCode(calendar.calendarEmbeddedCode || "");

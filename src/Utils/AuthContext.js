@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
         setIsCompanyAdmin(fetchedUser.role === "company_admin");
       }
     } catch (err) {
-      console.log(err);
+     
       toast.error(err.response.data.error)
 
     } finally {

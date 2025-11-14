@@ -100,7 +100,7 @@ const ProfileModal = ({ onClose }) => {
       };
 
       const res = await resetPasswordApi(payload); // assuming API returns { success: true/false, message }
-      console.log(res)
+  
       if (res?.data?.message) {
         toast.success(res.data.message || "Password updated successfully");
         
